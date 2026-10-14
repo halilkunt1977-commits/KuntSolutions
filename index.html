@@ -134,6 +134,7 @@ footer img{height:52px}
 /* Hero-Szene */
 .scene{position:absolute;right:3%;top:50%;transform:translateY(-46%);width:min(46vw,620px);aspect-ratio:1.05;z-index:1}
 .sky{position:absolute;inset:auto 0 0 0;height:62%;border-radius:28px;overflow:hidden;background:linear-gradient(180deg,#eef1ff,#dfe5ff)}
+.sky:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,28,85,.05),rgba(20,28,85,.35))}
 .sky img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .gl{position:absolute;background:#fff;border:1px solid #e3e7f7;border-radius:18px;box-shadow:0 24px 50px -24px rgba(20,28,85,.4);padding:16px 18px;will-change:transform;animation:bob 6s ease-in-out infinite}
 .gl small{display:block;font-size:11px;font-weight:700;color:var(--mute);letter-spacing:.04em;text-transform:uppercase}
@@ -151,7 +152,7 @@ footer img{height:52px}
 .g3 .bars i{flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#6f82ff,#3a4fd8);transform-origin:bottom;animation:grow 1.2s cubic-bezier(.2,.7,.2,1) both}
 @keyframes grow{from{transform:scaleY(0)}}
 .g4{left:6%;bottom:-4%;width:46%;padding:0;overflow:hidden;animation-delay:-4s}
-.g4 img{width:100%;display:block}
+.g4 img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover}
 .g5{right:8%;bottom:6%;display:flex;align-items:center;gap:10px;animation-delay:-5s}
 .g5 .ai{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#3a4fd8,#6f82ff);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
 /* Themenwelten */
@@ -160,7 +161,7 @@ footer img{height:52px}
 .world.r .wimg{order:2}
 .wimg{border-radius:28px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(20,28,85,.45);transition:transform .5s}
 .wimg:hover{transform:scale(1.02) rotate(-.4deg)}
-.wimg img{width:100%;display:block}
+.wimg img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
 .world h3{font-size:clamp(28px,3vw,40px);margin:14px 0 14px}
 .world p{color:var(--mute)}
 .chk{list-style:none;margin-top:22px;display:grid;gap:10px}
@@ -193,7 +194,7 @@ footer img{height:52px}
 .mbox .x{position:absolute;right:16px;top:16px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:18px;cursor:pointer}
 .mbox .btn{margin-top:24px}
 .side-img{border-radius:24px;overflow:hidden;margin-top:34px}
-.side-img img{width:100%;display:block}
+.side-img img{width:100%;display:block;aspect-ratio:16/8;object-fit:cover}
 @media (max-width:1000px){.scene{position:relative;right:auto;top:auto;transform:none;width:100%;max-width:560px;margin:46px auto 0}.world{grid-template-columns:1fr;gap:30px}.world.r .wimg{order:0}.trends{grid-template-columns:1fr 1fr}.guides{grid-template-columns:1fr 1fr}.hero{flex-direction:column}}
 @media (max-width:640px){.trends,.guides{grid-template-columns:1fr}.g1{width:70%}.g2{width:40%}.g3{width:44%}.g5{display:none}.mbox{padding:28px 22px}}
 /* Animation */
@@ -214,12 +215,12 @@ footer img{height:52px}
 <header class="hero">
   <canvas id="fx"></canvas>
   <div class="scene" aria-hidden="true">
-    <div class="sky"><img src="/assets/img/skyline.svg" alt=""></div>
+    <div class="sky"><img src="/img/skyline.jpg" alt="Hochhäuser"></div>
     <div class="gl g1"><small data-i="g1">Umsatzentwicklung</small><svg viewBox="0 0 300 110"><defs><linearGradient id="fa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f82ff" stop-opacity=".35"/><stop offset="1" stop-color="#6f82ff" stop-opacity="0"/></linearGradient></defs>
       <path d="M0 96 L40 84 L80 88 L120 64 L160 70 L200 44 L240 50 L292 14 L292 110 L0 110Z" fill="url(#fa)"/><path class="ln" d="M0 96 L40 84 L80 88 L120 64 L160 70 L200 44 L240 50 L292 14" fill="none" stroke="#3a4fd8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle class="ar" cx="292" cy="14" r="7" fill="#16a37a"/></svg></div>
     <div class="gl g2"><small data-i="g2">Wachstum</small><b><span class="cnt" data-to="38">0</span> %</b><div class="up">▲ <span data-i="g2u">Ziel erreicht</span></div></div>
     <div class="gl g3"><small data-i="g3">Effizienz</small><div class="bars"><i style="height:35%;animation-delay:.2s"></i><i style="height:52%;animation-delay:.35s"></i><i style="height:48%;animation-delay:.5s"></i><i style="height:70%;animation-delay:.65s"></i><i style="height:92%;animation-delay:.8s"></i></div></div>
-    <div class="gl g4"><img src="/assets/img/laptop.svg" alt=""></div>
+    <div class="gl g4"><img src="/img/laptop.jpg" alt="Dashboard am Laptop"></div>
     <div class="gl g5"><div class="ai">KI</div><div><small data-i="g5">Automatisiert</small><b style="font-size:16px" data-i="g5b">+12 Std./Woche</b></div></div>
   </div>
   <div class="wrap">
@@ -248,10 +249,10 @@ footer img{height:52px}
 
 <section id="themen" style="background:var(--bg)"><div class="wrap">
   <div class="sh"><div><div class="lbl rv" data-i="tk">Themenwelten</div><h2 class="rv" style="margin-top:18px" data-i="th">Wo wir Unternehmen <span class="b">nach vorne bringen.</span></h2></div><p class="rv" data-i="tp">Vier Felder, in denen sich gerade am meisten bewegt – und in denen wir selbst Projekte aufgebaut haben.</p></div>
-  <div class="world rv"><div class="wimg"><img src="/assets/img/ki.svg" alt="KI-Lösungen" loading="lazy"></div><div><div class="lbl" data-i="w1k">KI-Lösungen</div><h3 data-i="w1h">Künstliche Intelligenz, die im Alltag hilft.</h3><p data-i="w1t">Wir zeigen, wo KI in Ihrem Unternehmen wirklich Zeit spart – und setzen es um: von Angeboten und Kundenanfragen bis zur Auswertung von Dokumenten.</p><ul class="chk" data-i="w1l"><li>KI-Check: Wo lohnt sich KI bei Ihnen?</li><li>Chatbots und automatische Antworten</li><li>Angebote, Texte und Dokumente automatisch erstellen</li><li>Schulung für Ihr Team</li></ul></div></div>
-  <div class="world r rv"><div class="wimg"><img src="/assets/img/handel.svg" alt="Handel und E-Commerce" loading="lazy"></div><div><div class="lbl" data-i="w2k">Handel &amp; E-Commerce</div><h3 data-i="w2h">Vom Ladengeschäft zum Online-Umsatz.</h3><p data-i="w2t">Ob Großhandel, Ersatzteile oder Einzelhandel: Wir bauen Shops, Preislisten und Bestellwege, die Kunden gern nutzen.</p><ul class="chk" data-i="w2l"><li>Online-Shop und B2B-Portal</li><li>Sortiment, Preise und Margen</li><li>Lieferanten und Direktversand</li><li>Marktplätze und Online-Marketing</li></ul></div></div>
-  <div class="world rv"><div class="wimg"><img src="/assets/img/wachstum.svg" alt="Wachstum und Strategie" loading="lazy"></div><div><div class="lbl" data-i="w3k">Wachstum &amp; Strategie</div><h3 data-i="w3h">Klare Zahlen, klare Ziele, messbares Wachstum.</h3><p data-i="w3t">Wir schauen auf Ihre Zahlen, finden die Hebel und machen daraus einen Plan, den Ihr Team umsetzen kann.</p><ul class="chk" data-i="w3l"><li>Kennzahlen und Dashboards</li><li>Preis- und Angebotsstrategie</li><li>Neue Märkte und Zielgruppen</li><li>Businessplan für Bank und Förderung</li></ul></div></div>
-  <div class="world r rv"><div class="wimg"><img src="/assets/img/team.svg" alt="Personal und Fachkräfte" loading="lazy"></div><div><div class="lbl" data-i="w4k">Personal &amp; Fachkräfte</div><h3 data-i="w4h">Die richtigen Menschen für Ihr Unternehmen.</h3><p data-i="w4t">Fachkräfte fehlen überall. Wir helfen beim Finden, Auswählen und Einarbeiten – auch international, inklusive Anerkennung und Visum.</p><ul class="chk" data-i="w4l"><li>Stellenanzeigen, die gefunden werden</li><li>Fachkräfte aus dem Ausland</li><li>Anerkennung und Visum begleiten</li><li>Onboarding und Bindung</li></ul></div></div>
+  <div class="world rv"><div class="wimg"><img src="/img/ki.jpg" alt="KI-Lösungen" loading="lazy"></div><div><div class="lbl" data-i="w1k">KI-Lösungen</div><h3 data-i="w1h">Künstliche Intelligenz, die im Alltag hilft.</h3><p data-i="w1t">Wir zeigen, wo KI in Ihrem Unternehmen wirklich Zeit spart – und setzen es um: von Angeboten und Kundenanfragen bis zur Auswertung von Dokumenten.</p><ul class="chk" data-i="w1l"><li>KI-Check: Wo lohnt sich KI bei Ihnen?</li><li>Chatbots und automatische Antworten</li><li>Angebote, Texte und Dokumente automatisch erstellen</li><li>Schulung für Ihr Team</li></ul></div></div>
+  <div class="world r rv"><div class="wimg"><img src="/img/handel.jpg" alt="Handel und E-Commerce" loading="lazy"></div><div><div class="lbl" data-i="w2k">Handel &amp; E-Commerce</div><h3 data-i="w2h">Vom Ladengeschäft zum Online-Umsatz.</h3><p data-i="w2t">Ob Großhandel, Ersatzteile oder Einzelhandel: Wir bauen Shops, Preislisten und Bestellwege, die Kunden gern nutzen.</p><ul class="chk" data-i="w2l"><li>Online-Shop und B2B-Portal</li><li>Sortiment, Preise und Margen</li><li>Lieferanten und Direktversand</li><li>Marktplätze und Online-Marketing</li></ul></div></div>
+  <div class="world rv"><div class="wimg"><img src="/img/wachstum.jpg" alt="Wachstum und Strategie" loading="lazy"></div><div><div class="lbl" data-i="w3k">Wachstum &amp; Strategie</div><h3 data-i="w3h">Klare Zahlen, klare Ziele, messbares Wachstum.</h3><p data-i="w3t">Wir schauen auf Ihre Zahlen, finden die Hebel und machen daraus einen Plan, den Ihr Team umsetzen kann.</p><ul class="chk" data-i="w3l"><li>Kennzahlen und Dashboards</li><li>Preis- und Angebotsstrategie</li><li>Neue Märkte und Zielgruppen</li><li>Businessplan für Bank und Förderung</li></ul></div></div>
+  <div class="world r rv"><div class="wimg"><img src="/img/team.jpg" alt="Personal und Fachkräfte" loading="lazy"></div><div><div class="lbl" data-i="w4k">Personal &amp; Fachkräfte</div><h3 data-i="w4h">Die richtigen Menschen für Ihr Unternehmen.</h3><p data-i="w4t">Fachkräfte fehlen überall. Wir helfen beim Finden, Auswählen und Einarbeiten – auch international, inklusive Anerkennung und Visum.</p><ul class="chk" data-i="w4l"><li>Stellenanzeigen, die gefunden werden</li><li>Fachkräfte aus dem Ausland</li><li>Anerkennung und Visum begleiten</li><li>Onboarding und Bindung</li></ul></div></div>
 </div></section>
 
 <section id="branchen" class="dark"><div class="wrap" style="position:relative">
@@ -284,7 +285,7 @@ footer img{height:52px}
     <div class="step rv"><div class="dot">03</div><h4 data-i="p3">Umsetzung</h4><p data-i="p3p">Wir packen mit an – von Prozessen bis zur Software.</p></div>
     <div class="step rv"><div class="dot">04</div><h4 data-i="p4">Begleitung</h4><p data-i="p4p">Wir messen Ergebnisse und bleiben an Ihrer Seite.</p></div>
   </div>
-  <div class="side-img rv" style="max-width:900px;margin:70px auto 0"><img src="/assets/img/meeting.svg" alt="Beratungsgespräch" loading="lazy"></div>
+  <div class="side-img rv" style="max-width:900px;margin:70px auto 0"><img src="/img/meeting.jpg" alt="Beratungsgespräch" loading="lazy"></div>
 </div></section>
 
 <section id="projekte" style="background:var(--bg)"><div class="wrap">
@@ -311,7 +312,7 @@ footer img{height:52px}
       <div class="wi rv"><div class="ck">✓</div><div><b data-i="w2">Branchenübergreifend</b><span data-i="w2p">Ideen aus Industrie, Handel und Bildung bringen frischen Blick in Ihr Geschäft.</span></div></div>
       <div class="wi rv"><div class="ck">✓</div><div><b data-i="w3">Mehrsprachig</b><span data-i="w3p">Beratung auf Deutsch, Türkisch und Englisch.</span></div></div>
     </div></div>
-  <div class="rv"><div class="side-img" style="margin:0 0 34px"><img src="/assets/img/laptop.svg" alt="" loading="lazy"></div><p class="quote" data-i="q">„Jedes Unternehmen hat ein nächstes Level. Unsere Aufgabe ist es, den Weg dorthin <span class="b">einfach und machbar</span> zu machen.“</p><p class="sig">Halil Kunt · <span data-i="gf">Geschäftsführer</span></p></div>
+  <div class="rv"><div class="side-img" style="margin:0 0 34px"><img src="/img/zahlen.jpg" alt="Zahlen und Auswertungen" loading="lazy"></div><p class="quote" data-i="q">„Jedes Unternehmen hat ein nächstes Level. Unsere Aufgabe ist es, den Weg dorthin <span class="b">einfach und machbar</span> zu machen.“</p><p class="sig">Halil Kunt · <span data-i="gf">Geschäftsführer</span></p></div>
 </div></section>
 
 <section id="kontakt" style="padding-top:40px"><div class="wrap">

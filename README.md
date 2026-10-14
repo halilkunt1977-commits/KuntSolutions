@@ -9,3 +9,10 @@ an `KONTAKT_TO` (mehrere mit Komma, sonst info@kuntsolutions.de, Antworten gehen
 - über SMTP (Strato): `SMTP_HOST=smtp.strato.de`, `SMTP_PORT=465`, `SMTP_USER=info@kuntsolutions.de`, `SMTP_PASS=…` (optional `MAIL_FROM`, `SMTP_SECURE`)
 - sonst über Resend: `RESEND_API_KEY`, `MAIL_FROM`.
 Logo in `assets/`.
+
+## Fotos
+Die Seite lädt Fotos über `/img/<name>.jpg` (Namen: skyline, laptop, ki, handel, wachstum, team, meeting, zahlen).
+Liegt `assets/img/<name>.jpg` im Repo (eigenes Foto), wird das genommen. Sonst holt der Server einmalig das
+Unsplash-Foto aus `FOTOS` in `server.js` und speichert es in `DATA_DIR/img`. Ohne Internet: die Zeichnung `<name>.svg`.
+Anderes Foto: eigene Datei als `assets/img/<name>.jpg` ablegen oder die Unsplash-ID in `FOTOS` ändern
+(und `DATA_DIR/img/<name>.jpg` löschen).

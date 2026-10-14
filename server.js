@@ -7,7 +7,37 @@ const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
 const PUBLIC = new Set(["index.html", "impressum.html", "datenschutz.html", "robots.txt", "sitemap.xml"]);
-const hits = new Map(), GZ = new Map();
+const hits = new Map(), GZ = new Map(), LOADING = new Map();
+// Fotos: /img/<name>.jpg nimmt ein eigenes Foto aus assets/img/<name>.jpg, sonst einmalig ein Unsplash-Foto
+// (Unsplash-Lizenz, frei auch gewerblich) in DATA_DIR/img – Besucher laden nichts von fremden Servern.
+// Klappt beides nicht, kommt die Zeichnung assets/img/<name>.svg.
+const FOTOS = { skyline: "1486406146926-c627a92ad1ab", laptop: "1551288049-bebda4e38f71", ki: "1485827404703-89b55fcc595e", handel: "1441986300917-64674bd600d8", wachstum: "1460925895917-afdab827c52f", team: "1522071820081-009f0129c71c", meeting: "1552664730-d307ca884978", zahlen: "1454165804606-c3d57bc86b40" };
+const SVG_OF = { zahlen: "wachstum" };
+async function foto(n) {
+  const own = path.join(ROOT, "assets/img", n + ".jpg");
+  if (fs.existsSync(own)) return own;
+  const f = path.join(DATA_DIR, "img", n + ".jpg");
+  if (fs.existsSync(f)) return f;
+  if (!LOADING.has(n)) LOADING.set(n, (async () => {
+    const r = await fetch("https://images.unsplash.com/photo-" + FOTOS[n] + "?w=1600&q=72&fm=jpg&fit=crop", { signal: AbortSignal.timeout(15000) });
+    if (!r.ok || !/image/.test(r.headers.get("content-type") || "")) throw new Error("HTTP " + r.status);
+    fs.mkdirSync(path.dirname(f), { recursive: true });
+    fs.writeFileSync(f + ".tmp", Buffer.from(await r.arrayBuffer())); fs.renameSync(f + ".tmp", f);
+    return f;
+  })().finally(() => setTimeout(() => LOADING.delete(n), 60000)));
+  return LOADING.get(n);
+}
+async function fotoRoute(n, req, res) {
+  try {
+    const f = await foto(n);
+    res.writeHead(200, { "Content-Type": "image/jpeg", "Cache-Control": "public, max-age=604800", "Content-Length": fs.statSync(f).size });
+    if (req.method === "HEAD") return res.end();
+    fs.createReadStream(f).pipe(res);
+  } catch (e) {
+    console.error("Foto " + n + ":", e.message);
+    res.writeHead(302, { Location: "/assets/img/" + (SVG_OF[n] || n) + ".svg", "Cache-Control": "no-cache" }); res.end();
+  }
+}
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const clean = (v, n) => String(v ?? "").trim().slice(0, n);
 
@@ -94,6 +124,8 @@ http.createServer((req, res) => {
   const host = String(req.headers.host || "");
   if (host.startsWith("www.")) { res.writeHead(301, { Location: "https://" + host.slice(4) + req.url }); return res.end(); }
   if (url.pathname === "/api/kontakt" && req.method === "POST") return kontakt(req, res);
+  const fm = url.pathname.match(/^\/img\/(\w+)\.jpg$/);
+  if (fm && FOTOS[fm[1]]) return fotoRoute(fm[1], req, res);
   let name = PAGES[url.pathname] || url.pathname.replace(/^\/+/, "");
   const ok = PUBLIC.has(name) || (/^assets\/(img\/)?[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
   if (!ok) { res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" }); return fs.createReadStream(path.join(ROOT, "index.html")).pipe(res); }
