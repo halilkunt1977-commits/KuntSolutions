@@ -128,7 +128,9 @@ async function mailtest(url, res) {
   const to = kontaktTo();
   if (!mailInfo()) return out(500, "Mail ist NICHT eingerichtet. In Coolify fehlt: " + mailMissing().join(", "));
   try {
-    await sendMail({ to, subject: "Testmail von kuntsolutions.de", text: "Die Kontakt-Mails funktionieren.\n" + new Date().toISOString(), html: "<p>Die Kontakt-Mails von kuntsolutions.de funktionieren.</p>" });
+    // Testmail zeigt die echte Kunden-Bestätigung mit Beispieldaten (Sprache über ?lang=de|tr|en)
+    const c = confirmMail({ name: "Halil Kunt", company: "Muster GmbH", topic: "Gründung & Aufbau", lang: url.searchParams.get("lang") || "de", message: "Testmail: So sieht die automatische Bestätigung aus, die Kunden nach einer Anfrage bekommen." });
+    await sendMail({ to, subject: "[Test] " + c.subject, text: c.text, html: c.html });
     out(200, "Gesendet an " + to.join(", ") + " über " + mailInfo() + ". Bitte Postfach (auch Spam) prüfen.\nSpeicher: " + store());
   } catch (e) { out(500, "Fehler beim Senden über " + mailInfo() + ":\n" + e.message); }
 }
