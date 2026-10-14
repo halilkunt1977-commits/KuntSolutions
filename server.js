@@ -3,6 +3,7 @@
 // (sonst info@kuntsolutions.de): bevorzugt über SMTP (Strato: SMTP_HOST=smtp.strato.de, SMTP_PORT=465,
 // SMTP_USER, SMTP_PASS), sonst über Resend (RESEND_API_KEY, MAIL_FROM).
 const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os"), zlib = require("zlib"), crypto = require("crypto");
+const { confirmMail } = require("./mails");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
@@ -117,7 +118,7 @@ function adminOk(url) {
   const k = String(process.env.ADMIN_KEY || ""), g = String(url.searchParams.get("key") || "");
   return k.length >= 12 && g.length === k.length && crypto.timingSafeEqual(Buffer.from(g), Buffer.from(k));
 }
-const tests = [];
+const tests = [], confTo = new Map(), confAll = [];
 async function mailtest(url, res) {
   const out = (code, t) => { res.writeHead(code, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); res.end(t); };
   if (!adminOk(url)) return out(403, "Kein Zugriff. ADMIN_KEY in Coolify setzen und ?key=… anhängen.");
@@ -136,7 +137,7 @@ function anfragen(url, res) {
   let list = [];
   try { list = fs.readFileSync(path.join(DATA_DIR, "anfragen.jsonl"), "utf8").split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean).reverse(); } catch {}
   const st = (m) => m === "ok" ? "✅ Mail gesendet" : m === "spam" ? "🚫 Spamverdacht (keine Mail)" : m === "aus" || m == null ? "⚠️ Mail nicht eingerichtet" : "❌ " + m;
-  const rows = list.map((a) => `<div class="a"><div class="h"><b>${esc(a.name)}</b>${a.company ? " · " + esc(a.company) : ""}<span>${esc(new Date(a.ts).toLocaleString("de-DE", { timeZone: "Europe/Berlin" }))}</span></div><div>✉️ <a href="mailto:${esc(a.email)}">${esc(a.email)}</a>${a.phone ? " · 📞 " + esc(a.phone) : ""} · ${esc(a.topic || "–")}</div><p>${esc(a.message)}</p><small>${esc(st(a.mail))}</small></div>`).join("");
+  const rows = list.map((a) => `<div class="a"><div class="h"><b>${esc(a.name)}</b>${a.company ? " · " + esc(a.company) : ""}<span>${esc(new Date(a.ts).toLocaleString("de-DE", { timeZone: "Europe/Berlin" }))}</span></div><div>✉️ <a href="mailto:${esc(a.email)}">${esc(a.email)}</a>${a.phone ? " · 📞 " + esc(a.phone) : ""} · ${esc(a.topic || "–")}</div><p>${esc(a.message)}</p><small>${esc(st(a.mail))}${a.conf ? " · Bestätigung an Kunden: " + esc(a.conf === "ok" ? "✅ gesendet" : a.conf) : ""}</small></div>`).join("");
   res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" });
   res.end(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Anfragen</title><style>body{font-family:system-ui,sans-serif;background:#f7f8fc;color:#0f1430;max-width:820px;margin:auto;padding:20px}h1{color:#141c55}.a{background:#fff;border:1px solid #e4e7f3;border-radius:14px;padding:16px;margin:12px 0}.h{display:flex;gap:6px;flex-wrap:wrap}.h span{margin-left:auto;color:#5d6385;font-size:14px}p{white-space:pre-wrap}small{color:#5d6385}a{color:#3a4fd8}</style><h1>Anfragen (${list.length})</h1><p>Mail: ${esc(mailInfo() || "NICHT eingerichtet")}<br>Speicher: ${esc(store())}</p>${rows || "<p>Noch keine Anfragen.</p>"}`);
 }
@@ -157,9 +158,21 @@ async function kontakt(req, res) {
   const subject = `Neue Beratungsanfrage: ${a.topic || "Allgemein"} – ${a.name}${a.company ? " (" + a.company + ")" : ""}`;
   const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
   const html = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:24px;color:#0f1430"><div style="font-size:20px;font-weight:800;color:#141c55">KUNT SOLUTIONS · Neue Anfrage</div><table style="margin-top:16px;border-collapse:collapse;font-size:15px">${rows.map(([k, v]) => `<tr><td style="padding:6px 14px 6px 0;color:#5d6385;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;white-space:pre-wrap">${esc(v)}</td></tr>`).join("")}</table><p style="color:#5d6385;font-size:13px">Mit „Antworten“ schreiben Sie direkt an ${esc(a.email)}.</p></div>`;
-  let mail = "spam";
-  if (!spam) try { mail = (await sendMail({ to, replyTo: a.email, subject, text, html })) ? "ok" : "aus"; } catch (e) { mail = e.message; console.error("Mail fehlgeschlagen:", e.message); }
-  try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.appendFileSync(path.join(DATA_DIR, "anfragen.jsonl"), JSON.stringify({ ...a, mail }) + "\n"); } catch (e) { console.error("Anfrage nicht gespeichert:", e.message); }
+  let mail = "spam", conf = "–";
+  if (!spam) {
+    const own = sendMail({ to, replyTo: a.email, subject, text, html }).then((r) => (r ? "ok" : "aus"), (e) => (console.error("Mail fehlgeschlagen:", e.message), e.message));
+    // Eingangsbestätigung an den Kunden: höchstens 1 pro Adresse in 10 Min. und 40 pro Stunde insgesamt (kein Missbrauch als Mail-Schleuder)
+    const key = a.email.toLowerCase(), now = Date.now();
+    while (confAll.length && now - confAll[0] > 3600e3) confAll.shift();
+    let cp = Promise.resolve("übersprungen");
+    if (mailInfo() && !(now - (confTo.get(key) || 0) < 600e3) && confAll.length < 40) {
+      confTo.set(key, now); confAll.push(now);
+      const c = confirmMail(a);
+      cp = sendMail({ to: [a.email], replyTo: to[0], subject: c.subject, text: c.text, html: c.html }).then(() => "ok", (e) => (console.error("Bestätigung fehlgeschlagen:", e.message), e.message));
+    }
+    [mail, conf] = await Promise.all([own, cp]);
+  }
+  try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.appendFileSync(path.join(DATA_DIR, "anfragen.jsonl"), JSON.stringify({ ...a, mail, conf }) + "\n"); } catch (e) { console.error("Anfrage nicht gespeichert:", e.message); }
   json(200, { ok: true });
 }
 

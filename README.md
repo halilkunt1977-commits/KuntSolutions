@@ -22,3 +22,7 @@ In Coolify `ADMIN_KEY` setzen (mindestens 12 Zeichen). Dann:
 - `https://kuntsolutions.de/api/mailtest?key=ADMIN_KEY` schickt eine Testmail an `KONTAKT_TO` und zeigt „Gesendet“ oder die genaue Fehlermeldung (höchstens 5 pro Stunde).
 - `https://kuntsolutions.de/anfragen?key=ADMIN_KEY` listet alle gespeicherten Anfragen mit Mail-Status.
 Beim Start steht im Log, ob die Mail eingerichtet ist. Anfragen liegen in `DATA_DIR/anfragen.jsonl` – dafür ein Volume auf `/app/data` anlegen.
+
+## Bestätigung an Kunden und Signatur
+Jede Anfrage bekommt automatisch eine Eingangsbestätigung in der Sprache der Seite (`mails.js`, `confirmMail`), höchstens eine pro Adresse in 10 Minuten und 40 pro Stunde.
+`node mails.js` erzeugt `email/signatur.html` (Signatur für Outlook) und `email/vorschau.html` (Vorschau der Bestätigung).
