@@ -24,6 +24,7 @@ const TX = {
     foot: "You are receiving this email because a request with your address was sent on kuntsolutions.de. If that wasn't you, simply ignore this message." },
 };
 const tx = (l) => TX[l] || TX.de;
+const testBar = (on) => on ? `<tr><td bgcolor="#fff4c2" style="background:#fff4c2;padding:12px 32px;font-size:13px;color:#6b5200;${F}"><b>🧪 Testmail mit Beispieldaten</b> – echte Anfragen enthalten die Daten des Kunden.</td></tr>` : "";
 
 // Signatur (auch für Outlook): Logo, Team, Firma, Kontakt, Klick-Buttons und Rechner-Banner – ohne Telefon und ohne Funktion.
 // Farben zusätzlich als bgcolor, weil Outlook keine CSS-Hintergründe/Verläufe kennt. cta:false lässt Buttons und Banner weg.
@@ -46,7 +47,7 @@ function signature(l = "de", { cta = true } = {}) {
 }
 
 // Eingangsbestätigung an den Kunden
-function confirmMail(a) {
+function confirmMail(a, { test = false } = {}) {
   const l = TX[a.lang] ? a.lang : "de", t = tx(l), first = esc(String(a.name).split(/\s+/)[0] || a.name);
   const rows = [[t.topic, a.topic], [t.company, a.company], [t.msg, a.message.length > 600 ? a.message.slice(0, 600) + " …" : a.message]].filter((r) => r[1]);
   const btn = (href, label) => `<td style="padding:4px"><a href="${SITE}/${href}" style="display:inline-block;${F};font-size:13px;font-weight:bold;color:${NAVY};text-decoration:none;background:#eef1ff;border:1px solid #d5dbff;border-radius:10px;padding:10px 14px">${label}</a></td>`;
@@ -55,7 +56,7 @@ function confirmMail(a) {
 <div style="display:none;max-height:0;overflow:hidden">${esc(t.sub)} ${esc(t.lead)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f5fb"><tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;${F}">
-<tr><td style="padding:22px 32px;border-bottom:1px solid ${LINE}"><a href="${SITE}"><img src="${SITE}/assets/wordmark.png" width="210" alt="KUNT SOLUTIONS" style="display:block;width:210px;height:auto;border:0"></a></td></tr>
+${testBar(test)}<tr><td style="padding:22px 32px;border-bottom:1px solid ${LINE}"><a href="${SITE}"><img src="${SITE}/assets/wordmark.png" width="210" alt="KUNT SOLUTIONS" style="display:block;width:210px;height:auto;border:0"></a></td></tr>
 <tr><td style="background:${NAVY};background-image:linear-gradient(135deg,#0b1038,${NAVY} 55%,${BLUE});padding:36px 32px">
 <div style="font-size:12px;letter-spacing:3px;color:#9fb0ff;text-transform:uppercase">✓ ${esc(t.sub)}</div>
 <div style="font-size:28px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:10px">${t.hi(first)}</div>
@@ -67,7 +68,7 @@ ${rows.map(([k, v], i) => `<tr><td style="padding:12px 16px;${i ? `border-top:1p
 </table></td></tr>
 <tr><td style="padding:24px 32px 4px">
 <div style="font-size:12px;letter-spacing:2px;color:${BLUE};text-transform:uppercase;font-weight:bold;padding-bottom:6px">${esc(t.next)}</div>
-${t.steps.map(([h, p], i) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:10px 0"><tr><td style="vertical-align:top;padding-right:14px"><div style="width:34px;height:34px;line-height:34px;border-radius:17px;background:${NAVY};color:#fff;text-align:center;font-weight:bold;font-size:14px">${i + 1}</div></td><td style="vertical-align:top;font-size:14px;line-height:1.5;color:#0f1430"><b>${esc(h)}</b><br><span style="color:${MUTE}">${esc(p)}</span></td></tr></table>`).join("")}
+${t.steps.map(([h, p], i) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:10px 0"><tr><td style="vertical-align:top;padding-right:14px"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="34" height="34" align="center" valign="middle" bgcolor="${NAVY}" style="width:34px;height:34px;background:${NAVY};border-radius:17px;color:#ffffff;font-size:14px;font-weight:bold;${F};mso-line-height-rule:exactly;line-height:34px">${i + 1}</td></tr></table></td><td style="vertical-align:top;font-size:14px;line-height:1.5;color:#0f1430"><b>${esc(h)}</b><br><span style="color:${MUTE}">${esc(p)}</span></td></tr></table>`).join("")}
 </td></tr>
 <tr><td style="padding:18px 32px 6px"><div style="font-size:14px;color:${MUTE};padding-bottom:8px">${esc(t.more)}</div>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>${btn("#rechner", t.b1)}${btn("#gruendung", t.b2)}${btn("#wissen", t.b3)}</tr></table></td></tr>
@@ -81,23 +82,26 @@ ${t.steps.map(([h, p], i) => `<table role="presentation" cellpadding="0" cellspa
 }
 
 // Benachrichtigung an uns bei neuer Anfrage: gleiches Design, mit Schnell-Aktionen
-function leadMail(a) {
+// conf: Ergebnis der Kunden-Bestätigung ("ok", "übersprungen", "aus" oder Fehlertext)
+function leadMail(a, conf, { test = false } = {}) {
   const tel = String(a.phone || "").replace(/[^\d+]/g, ""), wa = tel.replace(/^\+/, "").replace(/^00/, "").replace(/^0/, "49");
   const subject = `Neue Beratungsanfrage: ${a.topic || "Allgemein"} – ${a.name}${a.company ? " (" + a.company + ")" : ""}`;
   const rows = [["E-Mail", a.email], ["Telefon", a.phone], ["Unternehmen", a.company], ["Thema", a.topic], ["Sprache", { de: "Deutsch", tr: "Türkisch", en: "Englisch" }[a.lang] || a.lang]].filter((r) => r[1]);
   const btn = (href, label, dark) => `<a href="${esc(href)}" style="display:inline-block;${F};font-size:14px;font-weight:bold;text-decoration:none;border-radius:10px;padding:11px 16px;margin:0 8px 8px 0;${dark ? `background:${NAVY};color:#ffffff;border:1px solid ${NAVY}` : `background:#eef1ff;color:${NAVY};border:1px solid #d5dbff`}">${label}</a>`;
+  const cs = conf === "ok" ? ["#e7f7f1", "#0e7a5c", `✅ Eingangsbestätigung an ${a.email} gesendet`] : conf === "übersprungen" ? ["#fff4c2", "#6b5200", `⏭️ Keine Eingangsbestätigung: an ${a.email} ging vor weniger als 10 Minuten schon eine`] : conf === "aus" || conf == null ? ["#fff4c2", "#6b5200", "⚠️ Keine Eingangsbestätigung (Mail nicht eingerichtet)"] : ["#fdecec", "#a1121a", `❌ Eingangsbestätigung an ${a.email} fehlgeschlagen: ${conf}`];
   const when = new Date(a.ts || Date.now()).toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "full", timeStyle: "short" });
   const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(subject)}</title></head>
 <body style="margin:0;padding:0;background:#f3f5fb">
 <div style="display:none;max-height:0;overflow:hidden">${esc(a.name)}: ${esc(String(a.message).slice(0, 140))}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f5fb"><tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;${F}">
-<tr><td style="padding:20px 32px;border-bottom:1px solid ${LINE}"><a href="${SITE}"><img src="${SITE}/assets/wordmark.png" width="190" alt="KUNT SOLUTIONS" style="display:block;width:190px;height:auto;border:0"></a></td></tr>
+${testBar(test)}<tr><td style="padding:20px 32px;border-bottom:1px solid ${LINE}"><a href="${SITE}"><img src="${SITE}/assets/wordmark.png" width="190" alt="KUNT SOLUTIONS" style="display:block;width:190px;height:auto;border:0"></a></td></tr>
 <tr><td bgcolor="${NAVY}" style="background:${NAVY};background-image:linear-gradient(135deg,#0b1038,${NAVY} 55%,${BLUE});padding:30px 32px">
 <div style="font-size:12px;letter-spacing:3px;color:#9fb0ff">🔔 NEUE ANFRAGE${a.topic ? " · " + esc(String(a.topic).toUpperCase()) : ""}</div>
 <div style="font-size:28px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:10px">${esc(a.name)}</div>
 ${a.company ? `<div style="font-size:16px;color:#c9d0f5;padding-top:4px">${esc(a.company)}</div>` : ""}
 <div style="font-size:13px;color:#9fa8d8;padding-top:10px">${esc(when)}</div></td></tr>
+<tr><td bgcolor="${cs[0]}" style="background:${cs[0]};color:${cs[1]};padding:12px 32px;font-size:13px;font-weight:bold">${esc(cs[2])}</td></tr>
 <tr><td style="padding:26px 32px 4px">
 <div style="font-size:12px;letter-spacing:2px;color:${BLUE};font-weight:bold;padding-bottom:10px">NACHRICHT</div>
 <div style="background:#f7f8fc;border:1px solid ${LINE};border-left:4px solid ${BLUE};border-radius:12px;padding:16px 18px;font-size:15px;line-height:1.6;color:#0f1430;white-space:pre-wrap">${esc(a.message)}</div></td></tr>
@@ -108,10 +112,10 @@ ${rows.map(([k, v], i) => `<tr><td style="padding:11px 16px;${i ? `border-top:1p
 </table></td></tr>
 <tr><td style="padding:22px 32px 6px">
 ${btn(`mailto:${a.email}?subject=${encodeURIComponent("Re: Ihre Anfrage bei Kunt Solutions")}`, "✉️ Antworten", true)}${tel ? btn(`tel:${tel}`, "📞 Anrufen") + btn(`https://wa.me/${wa}`, "💬 WhatsApp") : ""}
-<div style="font-size:12px;color:${MUTE};padding-top:6px">Der Kunde hat automatisch eine Eingangsbestätigung bekommen. „Antworten“ in deinem Mailprogramm geht direkt an ${esc(a.email)}.</div></td></tr>
+<div style="font-size:12px;color:${MUTE};padding-top:6px">„Antworten“ in deinem Mailprogramm geht direkt an ${esc(a.email)}.</div></td></tr>
 <tr><td style="padding:22px 32px 30px"><div style="border-top:1px solid ${LINE};padding-top:22px">${signature("de", { cta: false })}</div></td></tr>
 </table></td></tr></table></body></html>`;
-  const text = `Neue Anfrage von ${a.name}${a.company ? " (" + a.company + ")" : ""}\n${when}\n\n${a.message}\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}`;
+  const text = `${cs[2]}\n\nNeue Anfrage von ${a.name}${a.company ? " (" + a.company + ")" : ""}\n${when}\n\n${a.message}\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}`;
   return { subject, html, text };
 }
 

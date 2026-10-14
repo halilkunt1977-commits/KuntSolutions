@@ -128,12 +128,14 @@ async function mailtest(url, res) {
   const to = kontaktTo();
   if (!mailInfo()) return out(500, "Mail ist NICHT eingerichtet. In Coolify fehlt: " + mailMissing().join(", "));
   try {
-    // Testmail zeigt die echte Kunden-Bestätigung mit Beispieldaten (Sprache über ?lang=de|tr|en)
-    const c = confirmMail({ name: "Halil Kunt", company: "Muster GmbH", topic: "Gründung & Aufbau", lang: url.searchParams.get("lang") || "de", message: "Testmail: So sieht die automatische Bestätigung aus, die Kunden nach einer Anfrage bekommen." });
-    const n = leadMail({ ts: new Date().toISOString(), name: "Halil Kunt", company: "Muster GmbH", email: to[0], phone: "0176 00000000", topic: "Gründung & Aufbau", lang: "de", message: "Testmail: So sieht eine neue Anfrage bei dir aus.\nZweite Zeile der Nachricht." });
-    await sendMail({ to, subject: "[Test] " + n.subject, text: n.text, html: n.html });
-    await sendMail({ to, subject: "[Test] " + c.subject, text: c.text, html: c.html });
-    out(200, "2 Testmails (neue Anfrage + Kunden-Bestätigung) gesendet an " + to.join(", ") + " über " + mailInfo() + ". Bitte Postfach (auch Spam) prüfen.\nSpeicher: " + store());
+    // Testmails mit Beispieldaten: neue Anfrage (an uns) und Kunden-Bestätigung (an uns oder an ?an=adresse). Sprache über ?lang=de|tr|en
+    const an = String(url.searchParams.get("an") || "").trim(), cto = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(an) ? [an] : to;
+    const c = confirmMail({ name: "Halil Kunt", company: "Muster GmbH", topic: "Gründung & Aufbau", lang: url.searchParams.get("lang") || "de", message: "So sieht die automatische Bestätigung aus, die Kunden nach einer Anfrage bekommen." }, { test: true });
+    let conf;
+    try { await sendMail({ to: cto, replyTo: to[0], subject: "[TEST mit Beispieldaten] " + c.subject, text: c.text, html: c.html }); conf = "ok"; } catch (e) { conf = e.message; }
+    const n = leadMail({ ts: new Date().toISOString(), name: "Halil Kunt", company: "Muster GmbH", email: cto[0], phone: "0176 00000000", topic: "Gründung & Aufbau", lang: "de", message: "So sieht eine neue Anfrage bei dir aus.\nZweite Zeile der Nachricht." }, conf, { test: true });
+    await sendMail({ to, subject: "[TEST mit Beispieldaten] " + n.subject, text: n.text, html: n.html });
+    out(200, "Testmail „neue Anfrage“ gesendet an " + to.join(", ") + "\nKunden-Bestätigung an " + cto.join(", ") + ": " + (conf === "ok" ? "gesendet" : "FEHLER: " + conf) + "\nüber " + mailInfo() + ". Bitte Postfach (auch Spam) prüfen.\nSpeicher: " + store());
   } catch (e) { out(500, "Fehler beim Senden über " + mailInfo() + ":\n" + e.message); }
 }
 function anfragen(url, res) {
@@ -157,20 +159,21 @@ async function kontakt(req, res) {
   const spam = !!d.ks_hp || (typeof d.el === "number" && d.el < 3000);
   const a = { ts: new Date().toISOString(), name: clean(d.name, 120), company: clean(d.company, 160), email: clean(d.email, 200), phone: clean(d.phone, 60), topic: clean(d.topic, 80), message: clean(d.message, 4000), lang: clean(d.lang, 5) };
   if (!a.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email) || !a.message || d.consent !== true) return json(400, { error: "Pflichtfelder fehlen." });
-  const to = kontaktTo(), { subject, text, html } = leadMail(a);
+  const to = kontaktTo();
   let mail = "spam", conf = "–";
   if (!spam) {
-    const own = sendMail({ to, replyTo: a.email, subject, text, html }).then((r) => (r ? "ok" : "aus"), (e) => (console.error("Mail fehlgeschlagen:", e.message), e.message));
-    // Eingangsbestätigung an den Kunden: höchstens 1 pro Adresse in 10 Min. und 40 pro Stunde insgesamt (kein Missbrauch als Mail-Schleuder)
+    // Zuerst die Eingangsbestätigung an den Kunden (höchstens 1 pro Adresse in 10 Min. und 40 pro Stunde – keine Mail-Schleuder),
+    // dann die Anfrage an uns, mit dem Ergebnis der Bestätigung oben in der Mail.
     const key = a.email.toLowerCase(), now = Date.now();
     while (confAll.length && now - confAll[0] > 3600e3) confAll.shift();
-    let cp = Promise.resolve("übersprungen");
-    if (mailInfo() && !(now - (confTo.get(key) || 0) < 600e3) && confAll.length < 40) {
+    conf = !mailInfo() ? "aus" : now - (confTo.get(key) || 0) < 600e3 || confAll.length >= 40 ? "übersprungen" : null;
+    if (conf === null) {
       confTo.set(key, now); confAll.push(now);
       const c = confirmMail(a);
-      cp = sendMail({ to: [a.email], replyTo: to[0], subject: c.subject, text: c.text, html: c.html }).then(() => "ok", (e) => (console.error("Bestätigung fehlgeschlagen:", e.message), e.message));
+      conf = await sendMail({ to: [a.email], replyTo: to[0], subject: c.subject, text: c.text, html: c.html }).then(() => "ok", (e) => (console.error("Bestätigung fehlgeschlagen:", e.message), e.message));
     }
-    [mail, conf] = await Promise.all([own, cp]);
+    const { subject, text, html } = leadMail(a, conf);
+    mail = await sendMail({ to, replyTo: a.email, subject, text, html }).then((r) => (r ? "ok" : "aus"), (e) => (console.error("Mail fehlgeschlagen:", e.message), e.message));
   }
   try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.appendFileSync(path.join(DATA_DIR, "anfragen.jsonl"), JSON.stringify({ ...a, mail, conf }) + "\n"); } catch (e) { console.error("Anfrage nicht gespeichert:", e.message); }
   json(200, { ok: true });
