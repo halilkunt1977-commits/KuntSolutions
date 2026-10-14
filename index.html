@@ -195,6 +195,17 @@ footer img{height:52px}
 .mbox .btn{margin-top:24px}
 .side-img{border-radius:24px;overflow:hidden;margin-top:34px}
 .side-img img{width:100%;display:block;aspect-ratio:16/8;object-fit:cover}
+/* Referenzen */
+.refs{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.ref{display:flex;flex-direction:column;gap:6px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px 20px;transition:transform .3s,border-color .3s,box-shadow .3s}
+.ref:hover{transform:translateY(-4px);border-color:var(--blue2);box-shadow:0 20px 40px -24px rgba(20,28,85,.45)}
+.ref .mo{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-family:var(--wide);font-size:15px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--blue));margin-bottom:10px}
+.ref b{font-size:17px;color:var(--navy);line-height:1.25}
+.ref small{font-size:13px;color:var(--blue);font-weight:700}
+.ref.more{background:linear-gradient(160deg,var(--navy),var(--navy2));border-color:transparent}
+.ref.more .mo{background:rgba(255,255,255,.12);font-family:var(--sans);font-size:24px}
+.ref.more b{color:#fff}.ref.more small{color:#b9c2f5;font-weight:600}
+@media (max-width:1000px){.refs{grid-template-columns:repeat(2,1fr)}.ref.more{grid-column:1/-1}}
 /* Ersparnis-Rechner */
 .menu .btn.sm{white-space:nowrap}
 @media (max-width:1250px){.menu{gap:16px}.menu a[href="#projekte"],.menu a[href="#wissen"]{display:none}}
@@ -392,6 +403,17 @@ footer img{height:52px}
 </div></section>
 
 
+<section id="referenzen"><div class="wrap">
+  <div class="sh"><div><div class="lbl rv" data-i="fk">Referenzen</div><h2 class="rv" style="margin-top:18px" data-i="fh">Unternehmen, die <span class="b">uns vertrauen.</span></h2></div><p class="rv" data-i="fp">Ein kleiner Auszug unserer Kunden aus Industrie, Automotive und Handel – in Deutschland und der Türkei.</p></div>
+  <div class="refs">
+    <a class="ref rv" href="https://anilmakina.com" target="_blank" rel="noopener"><span class="mo">AM</span><b>Anıl Makina</b><small>anilmakina.com →</small></a>
+    <a class="ref rv" href="https://aparotomotiv.com" target="_blank" rel="noopener"><span class="mo">AO</span><b>Apar Otomotiv</b><small>aparotomotiv.com →</small></a>
+    <a class="ref rv" href="https://www.ppmtek.com" target="_blank" rel="noopener"><span class="mo">PP</span><b>PPMTEK</b><small>ppmtek.com →</small></a>
+    <a class="ref rv" href="https://www.bmpremiumparts.de" target="_blank" rel="noopener"><span class="mo">BM</span><b>BM Premium Parts</b><small>bmpremiumparts.de →</small></a>
+    <a class="ref more rv" href="#kontakt" id="refMore"><span class="mo">＋</span><b data-i="fm">Weitere Referenzen auf Anfrage</b><small data-i="fs">Gern nennen wir Ihnen Beispiele aus Ihrer Branche →</small></a>
+  </div>
+</div></section>
+
 <section id="wissen" style="background:var(--bg)"><div class="wrap">
   <div class="sh"><div><div class="lbl rv" data-i="ik">Wissen &amp; Infomaterial</div><h2 class="rv" style="margin-top:18px" data-i="ih">Kostenlose Leitfäden <span class="b">für Ihr Unternehmen.</span></h2></div><p class="rv" data-i="ip">Kompakt, praxisnah und sofort umsetzbar. Tippen Sie auf ein Thema.</p></div>
   <div class="guides" id="guides"></div>
@@ -432,7 +454,7 @@ footer img{height:52px}
 <script>
 const TOP={de:["Gründung & Aufbau","Strategie & Wachstum","Digitalisierung & Prozesse","Vertrieb & Marketing","Personal & Fachkräfte","Förderung & Finanzierung","Handel & E-Commerce","KI-Lösungen","Sonstiges"],tr:["Kuruluş ve yapılanma","Strateji ve büyüme","Dijitalleşme ve süreçler","Satış ve pazarlama","Personel ve kalifiye eleman","Teşvik ve finansman","Ticaret ve e-ticaret","Yapay zekâ çözümleri","Diğer"],en:["Founding & set-up","Strategy & growth","Digitalisation & processes","Sales & marketing","People & skilled workers","Funding & finance","Retail & e-commerce","AI solutions","Other"]};
 const TICK={de:["KI-Lösungen","Handel","Gründung","Strategie","Digitalisierung","Vertrieb","Personal","Förderung","Industrie","Handel","Bildung","Karriere"],tr:["Yapay zekâ","Ticaret","Kuruluş","Strateji","Dijitalleşme","Satış","Personel","Teşvik","Sanayi","Ticaret","Eğitim","Kariyer"],en:["AI solutions","Retail","Founding","Strategy","Digitalisation","Sales","People","Funding","Industry","Trade","Education","Careers"]};
-const T={tr:{m6:"Tasarruf hesapla",m7:"Kuruluş",zk:"Şirket kuruluşu",zn:"Teşvikli",zh:"Kendi işinize giden <span class=\"b\">yol.</span>",zp:"Fikirden ilk müşteriye: Kurucuları adım adım destekliyoruz – iş planı, finansman ve teşviklerle. Danışmanlık çoğu zaman tamamen karşılanıyor.",zf:"Teşvik bulucu",zfh:"Size hangi teşvik uygun?",zg:"AVGS kuponuyla kuruluş koçluğu – Almanca, İngilizce ve Türkçe.",b3:"Tasarrufu hesapla",hq:"Şirketiniz ne kadar tasarruf edebilir? Sektör seçin:",nw:"Ücretsiz · 1 dakika",m2:"Konular",m5:"Bilgi",g1:"Ciro gelişimi",g2:"Büyüme",g2u:"Hedefe ulaşıldı",g3:"Verimlilik",g5:"Otomatik",g5b:"+12 saat/hafta",
+const T={tr:{m6:"Tasarruf hesapla",fk:"Referanslar",fh:"Bize <span class=\"b\">güvenen şirketler.</span>",fp:"Almanya ve Türkiye'deki sanayi, otomotiv ve ticaret müşterilerimizden küçük bir seçki.",fm:"Diğer referanslar talep üzerine",fs:"Sektörünüzden örnekleri memnuniyetle paylaşırız →",m7:"Kuruluş",zk:"Şirket kuruluşu",zn:"Teşvikli",zh:"Kendi işinize giden <span class=\"b\">yol.</span>",zp:"Fikirden ilk müşteriye: Kurucuları adım adım destekliyoruz – iş planı, finansman ve teşviklerle. Danışmanlık çoğu zaman tamamen karşılanıyor.",zf:"Teşvik bulucu",zfh:"Size hangi teşvik uygun?",zg:"AVGS kuponuyla kuruluş koçluğu – Almanca, İngilizce ve Türkçe.",b3:"Tasarrufu hesapla",hq:"Şirketiniz ne kadar tasarruf edebilir? Sektör seçin:",nw:"Ücretsiz · 1 dakika",m2:"Konular",m5:"Bilgi",g1:"Ciro gelişimi",g2:"Büyüme",g2u:"Hedefe ulaşıldı",g3:"Verimlilik",g5:"Otomatik",g5b:"+12 saat/hafta",
  c7:"Ticaret ve e-ticaret",c7p:"Online mağaza, B2B portalı ve pazaryerleri – dijital kanallardan daha fazla ciro.",c7l:"<li>Mağaza</li><li>B2B</li><li>Pazaryerleri</li>",c8:"Yapay zekâ çözümleri",c8p:"Yapay zekâyı doğru kullanmak: otomasyon, chatbotlar, analizler.",c8l:"<li>Otomasyon</li><li>Chatbot</li><li>Veri</li>",
  tk:"Konu dünyaları",th:"Şirketleri <span class='b'>ileri taşıdığımız alanlar.</span>",tp:"Şu an en çok hareketin olduğu ve kendimiz proje kurduğumuz dört alan.",
  w1k:"Yapay zekâ çözümleri",w1h:"Günlük işte gerçekten yardım eden yapay zekâ.",w1t:"Şirketinizde yapay zekânın nerede gerçekten zaman kazandırdığını gösteriyor ve uyguluyoruz: tekliflerden müşteri taleplerine, belge analizine kadar.",w1l:"<li>YZ kontrolü: Sizde nerede değer?</li><li>Chatbotlar ve otomatik cevaplar</li><li>Teklif, metin ve belgeleri otomatik hazırlama</li><li>Ekibiniz için eğitim</li>",
@@ -451,7 +473,7 @@ const T={tr:{m6:"Tasarruf hesapla",m7:"Kuruluş",zk:"Şirket kuruluşu",zn:"Teş
  wk:"Neden Kunt Solutions",wh:"Uygulayan <span class='b'>danışmanlık.</span>",w1:"Slayt değil pratik",w1p:"Kendimiz şirketler kurduk – günlük hayatta neyin işe yaradığını biliyoruz.",w2:"Sektörler arası",w2p:"Sanayi, ticaret ve eğitimden gelen fikirler işinize taze bir bakış getirir.",w3:"Çok dilli",w3p:"Almanca, Türkçe ve İngilizce danışmanlık.",
  q:"„Her şirketin bir sonraki seviyesi vardır. Bizim işimiz oraya giden yolu <span class='b'>kolay ve uygulanabilir</span> kılmak.“",gf:"Genel Müdür",ck:"İletişim",ch:"Yükselmeye hazır mısınız?",cp:"Projenizi kısaca anlatın. İki iş günü içinde ücretsiz bir ön görüşme için size dönüyoruz.",fo:"Bilgilerimin talebin işlenmesi için kaydedilmesini kabul ediyorum. <a href='/datenschutz'>Gizlilik</a>",fb:"Talebi gönder →",ds:"Gizlilik",
  ph:{fn:"Ad Soyad *",fc:"Şirket",fe:"E-posta *",fp:"Telefon / WhatsApp",fm:"Talebiniz *"},ok:"Teşekkürler! Talebiniz bize ulaştı. En kısa sürede dönüyoruz.",err:"Gönderilemedi. Lütfen e-posta ile yazın: info@kuntsolutions.de",need:"Lütfen ad, e-posta, mesaj ve onayı doldurun.",send:"Gönderiliyor …"},
- en:{m6:"Savings calculator",m7:"Start-ups",zk:"Starting a business",zn:"With funding",zh:"Your path to <span class=\"b\">self-employment.</span>",zp:"From idea to first customer: we guide founders step by step – with business plan, financing and funding. Often the advice is fully paid for.",zf:"Funding finder",zfh:"Which funding fits you?",zg:"Start-up coaching with AVGS voucher – in German, English and Turkish.",b3:"Calculate savings",hq:"What could your business save? Pick your industry:",nw:"Free · 1 minute",m2:"Topics",m5:"Insights",g1:"Revenue trend",g2:"Growth",g2u:"Target reached",g3:"Efficiency",g5:"Automated",g5b:"+12 hrs/week",
+ en:{m6:"Savings calculator",fk:"References",fh:"Companies that <span class=\"b\">trust us.</span>",fp:"A small selection of our clients in industry, automotive and trade – in Germany and Turkey.",fm:"More references on request",fs:"We are happy to share examples from your industry →",m7:"Start-ups",zk:"Starting a business",zn:"With funding",zh:"Your path to <span class=\"b\">self-employment.</span>",zp:"From idea to first customer: we guide founders step by step – with business plan, financing and funding. Often the advice is fully paid for.",zf:"Funding finder",zfh:"Which funding fits you?",zg:"Start-up coaching with AVGS voucher – in German, English and Turkish.",b3:"Calculate savings",hq:"What could your business save? Pick your industry:",nw:"Free · 1 minute",m2:"Topics",m5:"Insights",g1:"Revenue trend",g2:"Growth",g2u:"Target reached",g3:"Efficiency",g5:"Automated",g5b:"+12 hrs/week",
  c7:"Retail & e-commerce",c7p:"Online shop, B2B portal and marketplaces – more revenue through digital channels.",c7l:"<li>Shop</li><li>B2B</li><li>Marketplaces</li>",c8:"AI solutions",c8p:"Using AI sensibly: automation, chatbots, analytics.",c8l:"<li>Automation</li><li>Chatbots</li><li>Data</li>",
  tk:"Focus areas",th:"Where we move businesses <span class='b'>forward.</span>",tp:"Four areas where the most is changing right now – and where we have built projects ourselves.",
  w1k:"AI solutions",w1h:"Artificial intelligence that helps every day.",w1t:"We show where AI really saves time in your company – and implement it: from quotes and customer enquiries to document analysis.",w1l:"<li>AI check: where does AI pay off for you?</li><li>Chatbots and automatic replies</li><li>Generate quotes, texts and documents automatically</li><li>Training for your team</li>",
@@ -602,6 +624,7 @@ function ffUpd(){const f=FF[L],op=(o,k)=>'<div class="op">'+o.map((t,i)=>'<butto
   document.getElementById('ffR').innerHTML=k.map(x=>{const r=f.r[x];return '<div class="fr"><div class="em">'+r[0]+'</div><div><b>'+r[1]+(x==='avgs'?'<span class="tg">'+f.free+'</span>':'')+'</b><span>'+r[2]+'</span></div></div>'}).join('')+
    '<a class="btn p" href="#kontakt" id="ffGo">'+f.cta+'</a><p class="note">'+f.note+'</p>';
   document.getElementById('ffGo').onclick=()=>{const t=document.getElementById('topic');if(t)t.selectedIndex=0;const m=document.querySelector('#form textarea[name=message]');if(m&&!m.value)m.value=f.q1+': '+f.o1[FS.a]+' · '+f.q2+' '+f.o2[FS.b]+'\n'}}
+document.getElementById('refMore').addEventListener('click',()=>{const t=document.getElementById('topic');if(t)t.selectedIndex=TOP[L].length-1;const m=document.querySelector('#form textarea[name=message]');if(m&&!m.value)m.value=({de:'Ich interessiere mich für Referenzen aus meiner Branche: ',tr:'Sektörümden referanslarla ilgileniyorum: ',en:'I am interested in references from my industry: '})[L]});
 window.GUIDES_READY=1;guidesUI();calcUI();grUI();
 // Karten folgen der Maus
 if(matchMedia('(hover:hover) and (pointer:fine)').matches)document.querySelectorAll('.card').forEach(c=>{c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');c.style.transform='perspective(800px) rotateX('+((.5-y)*6)+'deg) rotateY('+((x-.5)*6)+'deg) translateY(-4px)'});c.addEventListener('pointerleave',()=>c.style.transform='')});
