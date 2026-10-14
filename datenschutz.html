@@ -1,92 +1,144 @@
 <!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Datenschutz – Kunt Solutions</title>
-<meta name="description" content="Kunt Solutions UG aus Nürnberg entwickelt und betreibt spezialisierte digitale Plattformen: STARKSPAN, Gründarium, TRUCKPARTS24 und KariyerSen.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Datenschutz – Kunt Solutions</title><meta name="robots" content="noindex">
+<link rel="icon" href="/assets/k.png" type="image/png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0d0b;--bg2:#161512;--ink:#f3eee5;--mute:#a49d90;--line:rgba(243,238,229,.12);--gold:#c9a96b;--serif:"Fraunces",Georgia,serif;--sans:"Inter",system-ui,-apple-system,sans-serif}
+:root{--navy:#141c55;--navy2:#0b1038;--blue:#3a4fd8;--blue2:#6f82ff;--ink:#0f1430;--mute:#5d6385;--line:#e4e7f3;--bg:#f7f8fc;--silver:linear-gradient(135deg,#ffffff,#dfe3ef 45%,#b9c0d6);--wide:"Michroma",sans-serif;--sans:"Manrope",system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body{font-family:var(--sans);color:var(--ink);background:#fff;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-nav{position:fixed;top:0;left:0;right:0;z-index:20;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
-nav.s{background:rgba(14,13,11,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
-.logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;letter-spacing:.01em}
-.logo svg{width:34px;height:34px}
-.links{display:flex;gap:34px;align-items:center;font-size:14px;color:var(--mute)}
-.links a:hover{color:var(--ink)}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.lang button{background:none;border:0;color:var(--mute);font:500 12px var(--sans);padding:6px 11px;cursor:pointer;letter-spacing:.06em}
-.lang button.on{background:var(--ink);color:var(--bg)}
-.hero .wrap{width:100%;position:relative;z-index:1}
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:140px 0 90px;overflow:hidden}
-.glow{position:absolute;width:720px;height:720px;right:-180px;top:8%;border-radius:50%;background:radial-gradient(circle,rgba(201,169,107,.18),transparent 62%);filter:blur(10px);animation:drift 14s ease-in-out infinite alternate}
-@keyframes drift{to{transform:translate(-60px,40px) scale(1.08)}}
-.kick{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:14px}
-.kick::before{content:"";width:34px;height:1px;background:var(--gold)}
-h1{font-family:var(--serif);font-weight:300;font-size:clamp(46px,7.4vw,104px);line-height:1.02;letter-spacing:-.025em;margin:28px 0 30px;max-width:13ch}
-h1 em{font-style:italic;color:var(--gold);font-weight:300}
-.lead{font-size:clamp(17px,1.6vw,20px);color:var(--mute);max-width:560px}
-.cta{display:flex;gap:14px;margin-top:44px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;font-weight:500;font-size:15px;transition:transform .25s,background .25s,color .25s}
-.btn.p{background:var(--ink);color:var(--bg)}.btn.p:hover{background:var(--gold)}
-.btn.g{border:1px solid var(--line)}.btn.g:hover{border-color:var(--ink)}
-.btn:hover{transform:translateY(-2px)}
-.orbit{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:min(36vw,440px);aspect-ratio:1}
-.orbit svg{width:100%;height:100%;overflow:visible}
-.orbit .ring{fill:none;stroke:var(--line)}
-.orbit .rot{transform-origin:50% 50%;animation:spin 60s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.orbit text{font:500 10px var(--sans);letter-spacing:.18em;fill:var(--mute)}
-section{padding:130px 0;border-top:1px solid var(--line)}
-.sh{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:70px;flex-wrap:wrap}
-h2{font-family:var(--serif);font-weight:300;font-size:clamp(36px,4.8vw,64px);line-height:1.05;letter-spacing:-.02em;max-width:16ch}
-h2 em{font-style:italic;color:var(--gold)}
-.sh p{color:var(--mute);max-width:420px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:28px;overflow:hidden}
-.card{background:var(--bg);padding:48px 44px 44px;position:relative;min-height:380px;display:flex;flex-direction:column;transition:background .4s;overflow:hidden}
-.card::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;right:-160px;bottom:-200px;background:radial-gradient(circle,var(--c),transparent 65%);opacity:0;transition:opacity .5s}
-.card:hover{background:var(--bg2)}.card:hover::after{opacity:.22}
-.num{font-family:var(--serif);font-size:15px;color:var(--mute);display:flex;justify-content:space-between;align-items:center}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 18px var(--c)}
-.sector{margin-top:56px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--c)}
-.card h3{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:-.01em;margin:10px 0 14px}
-.card p{color:var(--mute);max-width:420px}
-.go{margin-top:auto;padding-top:34px;display:flex;align-items:center;gap:10px;font-size:14px;position:relative;z-index:1}
-.go span{display:inline-block;transition:transform .3s}.card:hover .go span{transform:translateX(6px)}
-.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
-.val .i{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:20px}
-.val h4{font-family:var(--serif);font-weight:400;font-size:28px;margin:14px 0 12px}
-.val p{color:var(--mute)}
-.quote{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3.4vw,44px);line-height:1.25;letter-spacing:-.01em;max-width:24ch}
-.quote em{color:var(--gold)}
-.sig{margin-top:30px;color:var(--mute);font-size:15px}.sig b{color:var(--ink);font-weight:500}
-.contact{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:end}
-.mail{font-family:var(--serif);font-weight:300;font-size:clamp(30px,4.6vw,62px);letter-spacing:-.02em;border-bottom:1px solid var(--line);padding-bottom:10px;display:inline-block;transition:color .3s,border-color .3s}
-.mail:hover{color:var(--gold);border-color:var(--gold)}
-.addr{color:var(--mute);font-size:15px;line-height:1.9}.addr b{color:var(--ink);font-weight:500}
-footer{border-top:1px solid var(--line);padding:34px 0;color:var(--mute);font-size:13px}
-footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-footer a:hover{color:var(--ink)}
-.rv{opacity:0;transform:translateY(26px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+.lbl{font-family:var(--wide);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue)}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em;line-height:1.05}
+h2{font-size:clamp(34px,4.6vw,58px)}
+h2 .b,h1 .b{background:linear-gradient(90deg,var(--blue),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Navigation */
+nav{position:fixed;inset:0 0 auto;z-index:30;transition:background .35s,box-shadow .35s,height .35s}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:84px;transition:height .35s}
+nav.s{background:rgba(255,255,255,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+nav.s .wrap{height:68px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:40px;width:auto}
+.brand b{white-space:nowrap;font-family:var(--wide);font-weight:400;font-size:15px;letter-spacing:.08em;color:var(--navy);line-height:1.1}
+.brand small{display:block;font-family:var(--wide);font-size:7.5px;letter-spacing:.42em;color:var(--mute)}
+.menu{display:flex;gap:30px;align-items:center;font-size:14.5px;font-weight:600;color:var(--mute)}
+.menu a:not(.btn):hover{color:var(--navy)}
+.lang{display:flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;font:700 11.5px var(--sans);color:var(--mute);padding:6px 10px;border-radius:999px;cursor:pointer}
+.lang button.on{background:var(--navy);color:#fff}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:14px;font-weight:700;font-size:15px;transition:transform .25s,box-shadow .25s,background .25s;cursor:pointer;border:0;font-family:var(--sans)}
+.btn.p{background:var(--navy);color:#fff;box-shadow:0 10px 30px -10px rgba(20,28,85,.6)}
+.btn.p:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 16px 36px -12px rgba(58,79,216,.7)}
+.btn.g{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn.g:hover{border-color:var(--navy);transform:translateY(-2px)}
+.btn.sm{padding:11px 18px;font-size:14px;border-radius:12px}
+/* Hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(1200px 700px at 85% 20%,#e9edff,transparent 60%),radial-gradient(900px 600px at 0% 100%,#f1f3fb,transparent 60%),#fff}
+#fx{position:absolute;inset:0;width:100%;height:100%}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-top:110px;padding-bottom:80px}
+.hero h1{font-size:clamp(46px,7.6vw,108px);margin:26px 0 26px;max-width:11ch}
+.hero p.lead{font-size:clamp(17px,1.5vw,20px);color:var(--mute);max-width:600px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:40px}
+.heroK{position:absolute;right:4%;top:50%;transform:translateY(-50%);width:min(30vw,380px);z-index:1;filter:drop-shadow(0 30px 60px rgba(20,28,85,.25));animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(calc(-50% - 16px))}}
+.ticker{position:absolute;bottom:0;left:0;right:0;z-index:2;border-top:1px solid var(--line);background:rgba(255,255,255,.7);backdrop-filter:blur(8px);overflow:hidden;white-space:nowrap}
+.ticker div{display:inline-block;padding:16px 0;animation:tick 40s linear infinite;font-family:var(--wide);font-size:11px;letter-spacing:.28em;color:var(--navy)}
+.ticker span{margin:0 28px}.ticker i{color:var(--blue);font-style:normal}
+@keyframes tick{to{transform:translateX(-50%)}}
+section{padding:130px 0;position:relative}
+.sh{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:end;margin-bottom:64px}
+.sh p{color:var(--mute)}
+/* Leistungen */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;padding:34px 30px 30px;transition:transform .35s,box-shadow .35s,border-color .35s;overflow:hidden;transform-style:preserve-3d}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 220px at var(--mx,50%) var(--my,0%),rgba(58,79,216,.10),transparent 60%);opacity:0;transition:opacity .3s}
+.card:hover{border-color:#cfd5ff;box-shadow:0 30px 60px -30px rgba(20,28,85,.35)}
+.card:hover::before{opacity:1}
+.ico{width:52px;height:52px;border-radius:14px;background:var(--silver);border:1px solid #d8dcea;display:grid;place-items:center;font-size:24px;box-shadow:inset 0 1px 0 #fff,0 6px 14px -8px rgba(20,28,85,.4)}
+.card h3{font-size:21px;margin:22px 0 10px;letter-spacing:-.01em}
+.card p{color:var(--mute);font-size:15.5px}
+.card ul{list-style:none;margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.card li{font-size:12px;font-weight:700;color:var(--navy);background:#f1f3fd;border-radius:999px;padding:5px 10px}
+/* Branchen */
+.dark{background:var(--navy2);color:#fff;overflow:hidden}
+.dark .sh p{color:#a9b0d6}
+.dark .lbl{color:var(--blue2)}
+.dark::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 90px,rgba(111,130,255,.06) 90px 92px)}
+.sec{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);border-radius:22px;overflow:hidden;position:relative}
+.sec div{background:var(--navy2);padding:34px 24px;transition:background .35s}
+.sec div:hover{background:#121a4f}
+.sec .n{font-family:var(--wide);font-size:11px;color:var(--blue2);letter-spacing:.2em}
+.sec h4{font-size:19px;margin:26px 0 8px;font-weight:700}
+.sec p{color:#a9b0d6;font-size:14.5px}
+/* Vorgehen */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;position:relative}
+.steps::before{content:"";position:absolute;left:0;right:0;top:27px;height:2px;background:var(--line)}
+.steps .bar{position:absolute;left:0;top:27px;height:2px;background:linear-gradient(90deg,var(--blue),var(--blue2));width:0;transition:width 1.6s cubic-bezier(.2,.7,.2,1)}
+.steps.in .bar{width:100%}
+.step{position:relative}
+.step .dot{width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid var(--line);display:grid;place-items:center;font-family:var(--wide);font-size:13px;color:var(--navy);position:relative;z-index:1;transition:border-color .6s,background .6s,color .6s}
+.steps.in .step .dot{border-color:var(--blue);background:var(--navy);color:#fff}
+.step h4{font-size:20px;margin:22px 0 8px;font-weight:800}
+.step p{color:var(--mute);font-size:15px}
+/* Projekte */
+.proj{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.pc{position:relative;border-radius:24px;padding:36px;min-height:270px;color:#fff;overflow:hidden;display:flex;flex-direction:column;background:var(--g);transition:transform .4s}
+.pc::after{content:"";position:absolute;width:340px;height:340px;right:-120px;top:-120px;border-radius:50%;background:rgba(255,255,255,.12);transition:transform .6s}
+.pc:hover{transform:translateY(-6px)}.pc:hover::after{transform:scale(1.25)}
+.pc .t{font-family:var(--wide);font-size:10.5px;letter-spacing:.24em;opacity:.85}
+.pc h3{font-size:34px;margin:16px 0 10px}
+.pc p{opacity:.88;max-width:440px;font-size:15.5px}
+.pc .go{margin-top:auto;padding-top:24px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center;position:relative;z-index:1}
+/* Warum */
+.why{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.wl{display:grid;gap:16px}
+.wi{display:flex;gap:18px;padding:22px;border-radius:18px;border:1px solid var(--line);background:#fff}
+.wi b{display:block;font-size:17px;margin-bottom:4px}
+.wi span{color:var(--mute);font-size:15px}
+.wi .ck{flex:none;width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800}
+.quote{font-size:clamp(26px,2.8vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.25;color:var(--navy)}
+.quote .b{color:var(--blue)}
+.sig{margin-top:22px;color:var(--mute);font-weight:600}
+/* Kontakt */
+.contact{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;border-radius:32px;padding:64px;display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;position:relative;overflow:hidden}
+.contact::before{content:"";position:absolute;right:-60px;bottom:-80px;width:360px;height:420px;background:url(/assets/k.png) center/contain no-repeat;opacity:.07}
+.contact h2{color:#fff}
+.contact p{color:#b7bde0;margin-top:18px}
+.cinfo{margin-top:34px;display:grid;gap:10px;color:#dfe3ff;font-size:15px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:1}
+form .f{grid-column:span 2}
+input,select,textarea{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 15px;color:#fff;font:500 15px var(--sans);outline:none;transition:border-color .2s,background .2s}
+input::placeholder,textarea::placeholder{color:#9ea6d6}
+input:focus,select:focus,textarea:focus{border-color:var(--blue2);background:rgba(255,255,255,.12)}
+select option{color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+.ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#b7bde0}
+.ok input{width:18px;height:18px;margin-top:2px;flex:none}
+.ok a{color:#fff;text-decoration:underline}
+form .btn.p{background:#fff;color:var(--navy);justify-content:center}
+form .btn.p:hover{background:var(--blue2);color:#fff}
+.msg{font-size:14px;font-weight:700}
+.hp{position:absolute;left:-9999px}
+footer{padding:40px 0;border-top:1px solid var(--line);font-size:13.5px;color:var(--mute)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer img{height:52px}
+/* Animation */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
 .rv.in{opacity:1;transform:none}
-@media (max-width:900px){.links a{display:none}.orbit{display:none}.grid{grid-template-columns:1fr}.vals{grid-template-columns:1fr;gap:44px}.contact{grid-template-columns:1fr}.card{padding:38px 28px;min-height:0}.card h3{font-size:34px}section{padding:96px 0}.wrap{padding:0 20px}}
+@media (max-width:1000px){.menu a:not(.btn){display:none}.heroK{display:none}.cards{grid-template-columns:1fr 1fr}.sec{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr;gap:40px}.steps::before,.steps .bar{display:none}.sh,.why,.contact{grid-template-columns:1fr}.contact{padding:40px 26px}}
+@media (max-width:640px){.cards,.sec,.proj,.steps{grid-template-columns:1fr}form{grid-template-columns:1fr}form .f{grid-column:auto}section{padding:96px 0}.wrap{padding:0 20px}.brand small{display:none}.brand b{font-size:12.5px}.brand img{height:34px}.menu .btn{display:none}.pc{padding:30px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
-.legal{padding:150px 0 110px}.legal h1{font-size:clamp(40px,6vw,72px);margin:20px 0 50px}.legal h3{font-family:var(--serif);font-weight:400;font-size:24px;margin:38px 0 10px}.legal p,.legal li{color:var(--mute);max-width:760px}.legal ul{padding-left:20px}.legal a{color:var(--gold)}
+
+.legal{padding:150px 0 100px}.legal h1{font-size:clamp(40px,6vw,68px);margin:18px 0 40px}.legal h3{font-size:20px;margin:34px 0 8px}.legal p{color:var(--mute);max-width:760px}.legal a{color:var(--blue)}
 </style></head><body>
-<nav class="s" id="nav"><div class="wrap"><a href="/" class="logo"><svg viewBox="0 0 40 40" fill="none"><rect x=".5" y=".5" width="39" height="39" rx="11" stroke="#c9a96b"/><path d="M13 10v20M13 21l12-11M17.5 17.5 26 30" stroke="#f3eee5" stroke-width="1.8" stroke-linecap="round"/></svg><span>Kunt Solutions</span></a><div class="links"><a href="/">← Startseite</a></div></div></nav><main class="legal"><div class="wrap"><div class="kick">Rechtliches</div><h1>Datenschutz</h1>
-<h3>Verantwortlicher</h3><p>Kunt Solutions UG (haftungsbeschränkt), Bruckwiesenstraße 17, 90441 Nürnberg, <a href="mailto:info@kuntsolutions.de">info@kuntsolutions.de</a></p>
-<h3>Hosting und Server-Logs</h3><p>Diese Webseite läuft auf einem eigenen Server in Deutschland. Beim Aufruf verarbeitet der Server technisch notwendige Daten (IP-Adresse, Datum und Uhrzeit, aufgerufene Seite, Browser). Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (sicherer Betrieb der Webseite). Die Log-Daten werden nach spätestens 14 Tagen gelöscht.</p>
-<h3>Keine Cookies, kein Tracking</h3><p>Wir setzen keine Cookies, keine Analyse- oder Werbe-Tools. Die gewählte Sprache wird nur im lokalen Speicher Ihres Browsers abgelegt und nicht an uns übertragen.</p>
+<nav class="s"><div class="wrap"><a href="/" class="brand"><img src="/assets/k.png" alt=""><span><b>KUNT SOLUTIONS</b><small>UPGRADE YOUR BUSINESS</small></span></a><div class="menu" style="display:flex"><a href="/" class="btn g sm">← Startseite</a></div></div></nav>
+<main class="legal"><div class="wrap"><div class="lbl">Rechtliches</div><h1>Datenschutz</h1><h3>Verantwortlicher</h3><p>Kunt Solutions UG (haftungsbeschränkt), Bruckwiesenstraße 17, 90441 Nürnberg, <a href="mailto:info@kuntsolutions.de">info@kuntsolutions.de</a></p>
+<h3>Hosting und Server-Logs</h3><p>Diese Webseite läuft auf einem eigenen Server in Deutschland. Beim Aufruf verarbeitet der Server technisch notwendige Daten (IP-Adresse, Datum und Uhrzeit, aufgerufene Seite, Browser). Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (sicherer Betrieb). Log-Daten werden nach spätestens 14 Tagen gelöscht.</p>
+<h3>Kontaktformular und E-Mail</h3><p>Wenn Sie uns über das Formular oder per E-Mail schreiben, verarbeiten wir Ihre Angaben (Name, Unternehmen, E-Mail, Telefon, Thema, Nachricht) zur Bearbeitung Ihrer Anfrage (Art. 6 Abs. 1 lit. b DSGVO bzw. Ihre Einwilligung nach lit. a). Die Anfrage wird auf unserem Server gespeichert und uns per E-Mail über den Dienst Resend (Resend, Inc., USA; Standardvertragsklauseln) zugestellt. Wir löschen die Daten, sobald sie nicht mehr erforderlich sind, spätestens nach zwei Jahren, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
+<h3>Keine Cookies, kein Tracking</h3><p>Wir setzen keine Cookies und keine Analyse- oder Werbe-Tools ein. Die gewählte Sprache wird nur im lokalen Speicher Ihres Browsers abgelegt.</p>
 <h3>Schriftarten</h3><p>Die Schriftarten werden von Google Fonts geladen. Dabei wird Ihre IP-Adresse an Google übertragen (Art. 6 Abs. 1 lit. f DSGVO, einheitliche Darstellung).</p>
-<h3>Kontakt per E-Mail</h3><p>Wenn Sie uns schreiben, verarbeiten wir Ihre Angaben zur Bearbeitung der Anfrage (Art. 6 Abs. 1 lit. b bzw. f DSGVO) und löschen sie, sobald sie nicht mehr erforderlich sind.</p>
-<h3>Ihre Rechte</h3><p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Aufsichtsbehörde, z. B. dem Bayerischen Landesamt für Datenschutzaufsicht (BayLDA).</p>
-</div></main><footer><div class="wrap"><span>© 2026 Kunt Solutions UG (haftungsbeschränkt)</span><span><a href="/impressum">Impressum</a> &nbsp;·&nbsp; <a href="/datenschutz">Datenschutz</a></span></div></footer></body></html>
+<h3>Ihre Rechte</h3><p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch, auf Widerruf einer Einwilligung sowie auf Beschwerde bei einer Aufsichtsbehörde, z. B. dem Bayerischen Landesamt für Datenschutzaufsicht (BayLDA).</p></div></main>
+<footer><div class="wrap"><img src="/assets/logo.png" alt="Kunt Solutions"><span>© 2026 Kunt Solutions UG (haftungsbeschränkt) · Nürnberg</span><span><a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></span></div></footer>
+</body></html>

@@ -3,162 +3,289 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kunt Solutions – Digitale Plattformen aus Nürnberg</title>
-<meta name="description" content="Kunt Solutions UG aus Nürnberg entwickelt und betreibt spezialisierte digitale Plattformen: STARKSPAN, Gründarium, TRUCKPARTS24 und KariyerSen.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Kunt Solutions – Unternehmensberatung · Upgrade your business</title>
+<meta name="description" content="Kunt Solutions UG aus Nürnberg: Unternehmensberatung für Gründung, Strategie, Digitalisierung, Vertrieb, Personal und Förderung – branchenübergreifend und umsetzungsstark.">
+<meta property="og:title" content="Kunt Solutions – Upgrade your business"><meta property="og:image" content="/assets/logo.png">
+<link rel="icon" href="/assets/k.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0d0b;--bg2:#161512;--ink:#f3eee5;--mute:#a49d90;--line:rgba(243,238,229,.12);--gold:#c9a96b;--serif:"Fraunces",Georgia,serif;--sans:"Inter",system-ui,-apple-system,sans-serif}
+:root{--navy:#141c55;--navy2:#0b1038;--blue:#3a4fd8;--blue2:#6f82ff;--ink:#0f1430;--mute:#5d6385;--line:#e4e7f3;--bg:#f7f8fc;--silver:linear-gradient(135deg,#ffffff,#dfe3ef 45%,#b9c0d6);--wide:"Michroma",sans-serif;--sans:"Manrope",system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body{font-family:var(--sans);color:var(--ink);background:#fff;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-nav{position:fixed;top:0;left:0;right:0;z-index:20;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
-nav.s{background:rgba(14,13,11,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
-.logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;letter-spacing:.01em}
-.logo svg{width:34px;height:34px}
-.links{display:flex;gap:34px;align-items:center;font-size:14px;color:var(--mute)}
-.links a:hover{color:var(--ink)}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.lang button{background:none;border:0;color:var(--mute);font:500 12px var(--sans);padding:6px 11px;cursor:pointer;letter-spacing:.06em}
-.lang button.on{background:var(--ink);color:var(--bg)}
-.hero .wrap{width:100%;position:relative;z-index:1}
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:140px 0 90px;overflow:hidden}
-.glow{position:absolute;width:720px;height:720px;right:-180px;top:8%;border-radius:50%;background:radial-gradient(circle,rgba(201,169,107,.18),transparent 62%);filter:blur(10px);animation:drift 14s ease-in-out infinite alternate}
-@keyframes drift{to{transform:translate(-60px,40px) scale(1.08)}}
-.kick{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:14px}
-.kick::before{content:"";width:34px;height:1px;background:var(--gold)}
-h1{font-family:var(--serif);font-weight:300;font-size:clamp(46px,7.4vw,104px);line-height:1.02;letter-spacing:-.025em;margin:28px 0 30px;max-width:13ch}
-h1 em{font-style:italic;color:var(--gold);font-weight:300}
-.lead{font-size:clamp(17px,1.6vw,20px);color:var(--mute);max-width:560px}
-.cta{display:flex;gap:14px;margin-top:44px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;font-weight:500;font-size:15px;transition:transform .25s,background .25s,color .25s}
-.btn.p{background:var(--ink);color:var(--bg)}.btn.p:hover{background:var(--gold)}
-.btn.g{border:1px solid var(--line)}.btn.g:hover{border-color:var(--ink)}
-.btn:hover{transform:translateY(-2px)}
-.orbit{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:min(36vw,440px);aspect-ratio:1}
-.orbit svg{width:100%;height:100%;overflow:visible}
-.orbit .ring{fill:none;stroke:var(--line)}
-.orbit .rot{transform-origin:50% 50%;animation:spin 60s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.orbit text{font:500 10px var(--sans);letter-spacing:.18em;fill:var(--mute)}
-section{padding:130px 0;border-top:1px solid var(--line)}
-.sh{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:70px;flex-wrap:wrap}
-h2{font-family:var(--serif);font-weight:300;font-size:clamp(36px,4.8vw,64px);line-height:1.05;letter-spacing:-.02em;max-width:16ch}
-h2 em{font-style:italic;color:var(--gold)}
-.sh p{color:var(--mute);max-width:420px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:28px;overflow:hidden}
-.card{background:var(--bg);padding:48px 44px 44px;position:relative;min-height:380px;display:flex;flex-direction:column;transition:background .4s;overflow:hidden}
-.card::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;right:-160px;bottom:-200px;background:radial-gradient(circle,var(--c),transparent 65%);opacity:0;transition:opacity .5s}
-.card:hover{background:var(--bg2)}.card:hover::after{opacity:.22}
-.num{font-family:var(--serif);font-size:15px;color:var(--mute);display:flex;justify-content:space-between;align-items:center}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 18px var(--c)}
-.sector{margin-top:56px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--c)}
-.card h3{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:-.01em;margin:10px 0 14px}
-.card p{color:var(--mute);max-width:420px}
-.go{margin-top:auto;padding-top:34px;display:flex;align-items:center;gap:10px;font-size:14px;position:relative;z-index:1}
-.go span{display:inline-block;transition:transform .3s}.card:hover .go span{transform:translateX(6px)}
-.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
-.val .i{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:20px}
-.val h4{font-family:var(--serif);font-weight:400;font-size:28px;margin:14px 0 12px}
-.val p{color:var(--mute)}
-.quote{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3.4vw,44px);line-height:1.25;letter-spacing:-.01em;max-width:24ch}
-.quote em{color:var(--gold)}
-.sig{margin-top:30px;color:var(--mute);font-size:15px}.sig b{color:var(--ink);font-weight:500}
-.contact{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:end}
-.mail{font-family:var(--serif);font-weight:300;font-size:clamp(30px,4.6vw,62px);letter-spacing:-.02em;border-bottom:1px solid var(--line);padding-bottom:10px;display:inline-block;transition:color .3s,border-color .3s}
-.mail:hover{color:var(--gold);border-color:var(--gold)}
-.addr{color:var(--mute);font-size:15px;line-height:1.9}.addr b{color:var(--ink);font-weight:500}
-footer{border-top:1px solid var(--line);padding:34px 0;color:var(--mute);font-size:13px}
-footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-footer a:hover{color:var(--ink)}
-.rv{opacity:0;transform:translateY(26px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+.lbl{font-family:var(--wide);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue)}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em;line-height:1.05}
+h2{font-size:clamp(34px,4.6vw,58px)}
+h2 .b,h1 .b{background:linear-gradient(90deg,var(--blue),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Navigation */
+nav{position:fixed;inset:0 0 auto;z-index:30;transition:background .35s,box-shadow .35s,height .35s}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:84px;transition:height .35s}
+nav.s{background:rgba(255,255,255,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+nav.s .wrap{height:68px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:40px;width:auto}
+.brand b{white-space:nowrap;font-family:var(--wide);font-weight:400;font-size:15px;letter-spacing:.08em;color:var(--navy);line-height:1.1}
+.brand small{display:block;font-family:var(--wide);font-size:7.5px;letter-spacing:.42em;color:var(--mute)}
+.menu{display:flex;gap:30px;align-items:center;font-size:14.5px;font-weight:600;color:var(--mute)}
+.menu a:not(.btn):hover{color:var(--navy)}
+.lang{display:flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;font:700 11.5px var(--sans);color:var(--mute);padding:6px 10px;border-radius:999px;cursor:pointer}
+.lang button.on{background:var(--navy);color:#fff}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:14px;font-weight:700;font-size:15px;transition:transform .25s,box-shadow .25s,background .25s;cursor:pointer;border:0;font-family:var(--sans)}
+.btn.p{background:var(--navy);color:#fff;box-shadow:0 10px 30px -10px rgba(20,28,85,.6)}
+.btn.p:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 16px 36px -12px rgba(58,79,216,.7)}
+.btn.g{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn.g:hover{border-color:var(--navy);transform:translateY(-2px)}
+.btn.sm{padding:11px 18px;font-size:14px;border-radius:12px}
+/* Hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(1200px 700px at 85% 20%,#e9edff,transparent 60%),radial-gradient(900px 600px at 0% 100%,#f1f3fb,transparent 60%),#fff}
+#fx{position:absolute;inset:0;width:100%;height:100%}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-top:110px;padding-bottom:80px}
+.hero h1{font-size:clamp(46px,7.6vw,108px);margin:26px 0 26px;max-width:11ch}
+.hero p.lead{font-size:clamp(17px,1.5vw,20px);color:var(--mute);max-width:600px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:40px}
+.heroK{position:absolute;right:4%;top:50%;transform:translateY(-50%);width:min(30vw,380px);z-index:1;filter:drop-shadow(0 30px 60px rgba(20,28,85,.25));animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(calc(-50% - 16px))}}
+.ticker{position:absolute;bottom:0;left:0;right:0;z-index:2;border-top:1px solid var(--line);background:rgba(255,255,255,.7);backdrop-filter:blur(8px);overflow:hidden;white-space:nowrap}
+.ticker div{display:inline-block;padding:16px 0;animation:tick 40s linear infinite;font-family:var(--wide);font-size:11px;letter-spacing:.28em;color:var(--navy)}
+.ticker span{margin:0 28px}.ticker i{color:var(--blue);font-style:normal}
+@keyframes tick{to{transform:translateX(-50%)}}
+section{padding:130px 0;position:relative}
+.sh{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:end;margin-bottom:64px}
+.sh p{color:var(--mute)}
+/* Leistungen */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;padding:34px 30px 30px;transition:transform .35s,box-shadow .35s,border-color .35s;overflow:hidden;transform-style:preserve-3d}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 220px at var(--mx,50%) var(--my,0%),rgba(58,79,216,.10),transparent 60%);opacity:0;transition:opacity .3s}
+.card:hover{border-color:#cfd5ff;box-shadow:0 30px 60px -30px rgba(20,28,85,.35)}
+.card:hover::before{opacity:1}
+.ico{width:52px;height:52px;border-radius:14px;background:var(--silver);border:1px solid #d8dcea;display:grid;place-items:center;font-size:24px;box-shadow:inset 0 1px 0 #fff,0 6px 14px -8px rgba(20,28,85,.4)}
+.card h3{font-size:21px;margin:22px 0 10px;letter-spacing:-.01em}
+.card p{color:var(--mute);font-size:15.5px}
+.card ul{list-style:none;margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.card li{font-size:12px;font-weight:700;color:var(--navy);background:#f1f3fd;border-radius:999px;padding:5px 10px}
+/* Branchen */
+.dark{background:var(--navy2);color:#fff;overflow:hidden}
+.dark .sh p{color:#a9b0d6}
+.dark .lbl{color:var(--blue2)}
+.dark::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 90px,rgba(111,130,255,.06) 90px 92px)}
+.sec{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);border-radius:22px;overflow:hidden;position:relative}
+.sec div{background:var(--navy2);padding:34px 24px;transition:background .35s}
+.sec div:hover{background:#121a4f}
+.sec .n{font-family:var(--wide);font-size:11px;color:var(--blue2);letter-spacing:.2em}
+.sec h4{font-size:19px;margin:26px 0 8px;font-weight:700}
+.sec p{color:#a9b0d6;font-size:14.5px}
+/* Vorgehen */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;position:relative}
+.steps::before{content:"";position:absolute;left:0;right:0;top:27px;height:2px;background:var(--line)}
+.steps .bar{position:absolute;left:0;top:27px;height:2px;background:linear-gradient(90deg,var(--blue),var(--blue2));width:0;transition:width 1.6s cubic-bezier(.2,.7,.2,1)}
+.steps.in .bar{width:100%}
+.step{position:relative}
+.step .dot{width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid var(--line);display:grid;place-items:center;font-family:var(--wide);font-size:13px;color:var(--navy);position:relative;z-index:1;transition:border-color .6s,background .6s,color .6s}
+.steps.in .step .dot{border-color:var(--blue);background:var(--navy);color:#fff}
+.step h4{font-size:20px;margin:22px 0 8px;font-weight:800}
+.step p{color:var(--mute);font-size:15px}
+/* Projekte */
+.proj{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.pc{position:relative;border-radius:24px;padding:36px;min-height:270px;color:#fff;overflow:hidden;display:flex;flex-direction:column;background:var(--g);transition:transform .4s}
+.pc::after{content:"";position:absolute;width:340px;height:340px;right:-120px;top:-120px;border-radius:50%;background:rgba(255,255,255,.12);transition:transform .6s}
+.pc:hover{transform:translateY(-6px)}.pc:hover::after{transform:scale(1.25)}
+.pc .t{font-family:var(--wide);font-size:10.5px;letter-spacing:.24em;opacity:.85}
+.pc h3{font-size:34px;margin:16px 0 10px}
+.pc p{opacity:.88;max-width:440px;font-size:15.5px}
+.pc .go{margin-top:auto;padding-top:24px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center;position:relative;z-index:1}
+/* Warum */
+.why{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.wl{display:grid;gap:16px}
+.wi{display:flex;gap:18px;padding:22px;border-radius:18px;border:1px solid var(--line);background:#fff}
+.wi b{display:block;font-size:17px;margin-bottom:4px}
+.wi span{color:var(--mute);font-size:15px}
+.wi .ck{flex:none;width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800}
+.quote{font-size:clamp(26px,2.8vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.25;color:var(--navy)}
+.quote .b{color:var(--blue)}
+.sig{margin-top:22px;color:var(--mute);font-weight:600}
+/* Kontakt */
+.contact{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;border-radius:32px;padding:64px;display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;position:relative;overflow:hidden}
+.contact::before{content:"";position:absolute;right:-60px;bottom:-80px;width:360px;height:420px;background:url(/assets/k.png) center/contain no-repeat;opacity:.07}
+.contact h2{color:#fff}
+.contact p{color:#b7bde0;margin-top:18px}
+.cinfo{margin-top:34px;display:grid;gap:10px;color:#dfe3ff;font-size:15px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:1}
+form .f{grid-column:span 2}
+input,select,textarea{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 15px;color:#fff;font:500 15px var(--sans);outline:none;transition:border-color .2s,background .2s}
+input::placeholder,textarea::placeholder{color:#9ea6d6}
+input:focus,select:focus,textarea:focus{border-color:var(--blue2);background:rgba(255,255,255,.12)}
+select option{color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+.ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#b7bde0}
+.ok input{width:18px;height:18px;margin-top:2px;flex:none}
+.ok a{color:#fff;text-decoration:underline}
+form .btn.p{background:#fff;color:var(--navy);justify-content:center}
+form .btn.p:hover{background:var(--blue2);color:#fff}
+.msg{font-size:14px;font-weight:700}
+.hp{position:absolute;left:-9999px}
+footer{padding:40px 0;border-top:1px solid var(--line);font-size:13.5px;color:var(--mute)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer img{height:52px}
+/* Animation */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
 .rv.in{opacity:1;transform:none}
-@media (max-width:900px){.links a{display:none}.orbit{display:none}.grid{grid-template-columns:1fr}.vals{grid-template-columns:1fr;gap:44px}.contact{grid-template-columns:1fr}.card{padding:38px 28px;min-height:0}.card h3{font-size:34px}section{padding:96px 0}.wrap{padding:0 20px}}
+@media (max-width:1000px){.menu a:not(.btn){display:none}.heroK{display:none}.cards{grid-template-columns:1fr 1fr}.sec{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr;gap:40px}.steps::before,.steps .bar{display:none}.sh,.why,.contact{grid-template-columns:1fr}.contact{padding:40px 26px}}
+@media (max-width:640px){.cards,.sec,.proj,.steps{grid-template-columns:1fr}form{grid-template-columns:1fr}form .f{grid-column:auto}section{padding:96px 0}.wrap{padding:0 20px}.brand small{display:none}.brand b{font-size:12.5px}.brand img{height:34px}.menu .btn{display:none}.pc{padding:30px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <nav id="nav"><div class="wrap">
-  <a href="#" class="logo" aria-label="Kunt Solutions">
-    <svg viewBox="0 0 40 40" fill="none"><rect x=".5" y=".5" width="39" height="39" rx="11" stroke="#c9a96b"/><path d="M13 10v20M13 21l12-11M17.5 17.5 26 30" stroke="#f3eee5" stroke-width="1.8" stroke-linecap="round"/></svg>
-    <span>Kunt Solutions</span></a>
-  <div class="links"><a href="#marken" data-i="n1">Marken</a><a href="#haltung" data-i="n2">Haltung</a><a href="#kontakt" data-i="n3">Kontakt</a>
+  <a href="#" class="brand"><img src="/assets/k.png" alt=""><span><b>KUNT SOLUTIONS</b><small>UPGRADE YOUR BUSINESS</small></span></a>
+  <div class="menu"><a href="#leistungen" data-i="m1">Leistungen</a><a href="#branchen" data-i="m2">Branchen</a><a href="#projekte" data-i="m3">Projekte</a><a href="#kontakt" class="btn p sm" data-i="m4">Beratung anfragen</a>
     <div class="lang"><button data-l="de" class="on">DE</button><button data-l="tr">TR</button><button data-l="en">EN</button></div></div>
 </div></nav>
 
-<header class="hero"><div class="glow"></div>
+<header class="hero">
+  <canvas id="fx"></canvas>
+  <img class="heroK" src="/assets/k.png" alt="">
   <div class="wrap">
-    <div class="kick rv" data-i="k">Kunt Solutions UG · Nürnberg</div>
-    <h1 class="rv" data-i="h">Digitale Plattformen für <em>echte Branchen.</em></h1>
-    <p class="lead rv" data-i="l">Wir entwickeln und betreiben spezialisierte Software, Shops und Portale – jede Marke mit eigenem Fokus, alle mit demselben Anspruch an Qualität und Verlässlichkeit.</p>
-    <div class="cta rv"><a class="btn p" href="#marken"><span data-i="b1">Unsere Marken</span> →</a><a class="btn g" href="#kontakt" data-i="b2">Kontakt aufnehmen</a></div>
+    <div class="lbl rv" data-i="k">Unternehmensberatung · Nürnberg</div>
+    <h1 class="rv" data-i="h">Upgrade your <span class="b">business.</span></h1>
+    <p class="lead rv" data-i="l">Wir beraten Unternehmen und Gründer in ganz unterschiedlichen Branchen – von der Idee über Strategie, Prozesse und Digitalisierung bis zur Umsetzung. Pragmatisch, persönlich und mit Ergebnis.</p>
+    <div class="cta rv"><a class="btn p" href="#kontakt"><span data-i="b1">Kostenloses Erstgespräch</span> →</a><a class="btn g" href="#leistungen" data-i="b2">Unsere Leistungen</a></div>
   </div>
-  <div class="orbit" aria-hidden="true"><svg viewBox="0 0 400 400">
-    <circle class="ring" cx="200" cy="200" r="190"/><circle class="ring" cx="200" cy="200" r="130"/><circle class="ring" cx="200" cy="200" r="70"/>
-    <g class="rot"><circle cx="200" cy="10" r="6" fill="#6f9bff"/><circle cx="390" cy="200" r="6" fill="#36c48f"/><circle cx="200" cy="390" r="6" fill="#f08a3e"/><circle cx="10" cy="200" r="6" fill="#e5484d"/></g>
-    <text x="200" y="204" text-anchor="middle">EST. NÜRNBERG</text></svg></div>
+  <div class="ticker"><div id="tick"></div></div>
 </header>
 
-<section id="marken"><div class="wrap">
-  <div class="sh"><h2 class="rv" data-i="mh">Vier Marken. <em>Ein Anspruch.</em></h2><p class="rv" data-i="mp">Jede Plattform löst ein konkretes Problem für eine klar umrissene Zielgruppe – vom Maschinenbau bis zur Karriere.</p></div>
-  <div class="grid">
-    <a class="card rv" href="https://www.starkspan.com" target="_blank" rel="noopener" style="--c:#6f9bff"><div class="num">01<span class="dot"></span></div><div class="sector" data-i="s1">Software · CNC-Fertigung</div><h3>STARKSPAN</h3><p data-i="d1">Der digitale Vertriebs- und Kalkulationsassistent für CNC-Dreh- und Fräsbetriebe: Zeichnung hochladen, mit eigener Firmenlogik kalkulieren, Angebote schneller vorbereiten.</p><div class="go">starkspan.com <span>→</span></div></a>
-    <a class="card rv" href="https://www.gruendarium.de" target="_blank" rel="noopener" style="--c:#36c48f"><div class="num">02<span class="dot"></span></div><div class="sector" data-i="s2">Coaching · AVGS</div><h3>Gründarium</h3><p data-i="d2">Gründungs- und Karrierecoaching mit AVGS-Gutschein – auf Deutsch, Englisch und Türkisch. Vom ersten Gedanken bis zum tragfähigen Plan.</p><div class="go">gruendarium.de <span>→</span></div></a>
-    <a class="card rv" href="https://truckparts24.de" target="_blank" rel="noopener" style="--c:#f08a3e"><div class="num">03<span class="dot"></span></div><div class="sector" data-i="s3">E-Commerce · Nutzfahrzeuge</div><h3>TRUCKPARTS24</h3><p data-i="d3">LKW-Ersatzteile per OEM-Nummer: Preis, Bild und Verfügbarkeit sofort, persönliche Händlerrabatte, Bestellung und Belege im Kundenkonto.</p><div class="go">truckparts24.de <span>→</span></div></a>
-    <a class="card rv" href="https://kariyersen.de" target="_blank" rel="noopener" style="--c:#e5484d"><div class="num">04<span class="dot"></span></div><div class="sector" data-i="s4">Karriere · Türkischsprachig</div><h3>KariyerSen</h3><p data-i="d4">Die türkischsprachige Karriereplattform für Deutschland: Stellenangebote, CV-Analyse, Bewerbungsunterlagen und Begleitung bis zum Visum.</p><div class="go">kariyersen.de <span>→</span></div></a>
+<section id="leistungen"><div class="wrap">
+  <div class="sh"><div><div class="lbl rv" data-i="lk">Leistungen</div><h2 class="rv" style="margin-top:18px" data-i="lh">Lösungen für jede Phase <span class="b">Ihres Unternehmens.</span></h2></div><p class="rv" data-i="lp">Ob Sie gründen, wachsen oder Ihr Unternehmen neu aufstellen: Wir analysieren, planen und setzen gemeinsam mit Ihnen um – mit Erfahrung aus Industrie, Handel, Bildung und Personal.</p></div>
+  <div class="cards">
+    <div class="card rv"><div class="ico">🚀</div><h3 data-i="c1">Gründung &amp; Aufbau</h3><p data-i="c1p">Vom Geschäftsmodell über Businessplan und Rechtsform bis zum Markteintritt in Deutschland.</p><ul data-i="c1l"><li>Businessplan</li><li>Rechtsform</li><li>Markteintritt</li></ul></div>
+    <div class="card rv"><div class="ico">🎯</div><h3 data-i="c2">Strategie &amp; Wachstum</h3><p data-i="c2p">Klare Ziele, starke Positionierung und ein Plan, der Umsatz und Ertrag messbar steigert.</p><ul data-i="c2l"><li>Positionierung</li><li>Preise</li><li>Expansion</li></ul></div>
+    <div class="card rv"><div class="ico">⚙️</div><h3 data-i="c3">Digitalisierung &amp; Prozesse</h3><p data-i="c3p">Abläufe vereinfachen, Software sinnvoll einsetzen, Zeit und Kosten sparen.</p><ul data-i="c3l"><li>Prozesse</li><li>Software</li><li>Automatisierung</li></ul></div>
+    <div class="card rv"><div class="ico">📈</div><h3 data-i="c4">Vertrieb &amp; Marketing</h3><p data-i="c4p">Mehr Anfragen, bessere Angebote, ein Auftritt, der verkauft – online wie offline.</p><ul data-i="c4l"><li>Website</li><li>Leads</li><li>Angebote</li></ul></div>
+    <div class="card rv"><div class="ico">🤝</div><h3 data-i="c5">Personal &amp; Fachkräfte</h3><p data-i="c5p">Die richtigen Mitarbeiter finden – auch internationale Fachkräfte, inklusive Begleitung bis zum Arbeitsbeginn.</p><ul data-i="c5l"><li>Recruiting</li><li>Fachkräfte</li><li>Onboarding</li></ul></div>
+    <div class="card rv"><div class="ico">💶</div><h3 data-i="c6">Förderung &amp; Finanzierung</h3><p data-i="c6p">Fördermittel, Zuschüsse und Coaching über AVGS – wir finden die passenden Wege für Ihr Vorhaben.</p><ul data-i="c6l"><li>AVGS</li><li>Förderkredite</li><li>Zuschüsse</li></ul></div>
   </div>
 </div></section>
 
-<section id="haltung"><div class="wrap">
-  <div class="sh"><h2 class="rv" data-i="hh">Wie wir <em>arbeiten.</em></h2></div>
-  <div class="vals">
-    <div class="val rv"><div class="i">i.</div><h4 data-i="v1">Fokus</h4><p data-i="v1p">Jede Marke hat eine Aufgabe und eine Zielgruppe. Wir bauen keine Alleskönner, sondern Werkzeuge, die genau passen.</p></div>
-    <div class="val rv"><div class="i">ii.</div><h4 data-i="v2">Eigene Technik</h4><p data-i="v2p">Entwicklung, Betrieb und Daten liegen bei uns – auf eigenen Servern in Deutschland, schnell und datenschutzbewusst.</p></div>
-    <div class="val rv"><div class="i">iii.</div><h4 data-i="v3">Verlässlichkeit</h4><p data-i="v3p">Kurze Wege, klare Antworten, persönliche Ansprechpartner. Was wir zusagen, halten wir.</p></div>
-  </div>
-  <div style="margin-top:110px" class="rv"><p class="quote" data-i="q">„Gute Software spürt man nicht. Man merkt nur, dass <em>alles leichter geht</em>.“</p><p class="sig"><b>Halil Kunt</b> · <span data-i="gf">Geschäftsführer</span></p></div>
-</div></section>
-
-<section id="kontakt"><div class="wrap">
-  <div class="kick rv" data-i="ck">Kontakt</div>
-  <div class="contact" style="margin-top:34px">
-    <div class="rv"><h2 data-i="ch" style="margin-bottom:34px">Sprechen wir <em>miteinander.</em></h2><a class="mail" href="mailto:info@kuntsolutions.de">info@kuntsolutions.de</a></div>
-    <div class="addr rv"><b>Kunt Solutions UG (haftungsbeschränkt)</b><br>Bruckwiesenstraße 17<br>90441 Nürnberg<br><span data-i="cl">Deutschland</span></div>
+<section id="branchen" class="dark"><div class="wrap" style="position:relative">
+  <div class="sh"><div><div class="lbl rv" data-i="bk">Branchen</div><h2 class="rv" style="margin-top:18px;color:#fff" data-i="bh">Erfahrung aus <span class="b">verschiedenen Sparten.</span></h2></div><p class="rv" data-i="bp">Wir kennen die Praxis – weil wir in diesen Branchen selbst Projekte aufgebaut haben.</p></div>
+  <div class="sec">
+    <div class="rv"><div class="n">01</div><h4 data-i="s1">Industrie &amp; Fertigung</h4><p data-i="s1p">CNC-Betriebe, Zulieferer, Maschinenbau</p></div>
+    <div class="rv"><div class="n">02</div><h4 data-i="s2">Handel &amp; Logistik</h4><p data-i="s2p">Nutzfahrzeuge, Ersatzteile, Online-Handel</p></div>
+    <div class="rv"><div class="n">03</div><h4 data-i="s3">Bildung &amp; Coaching</h4><p data-i="s3p">Bildungsträger, Coaches, AVGS-Maßnahmen</p></div>
+    <div class="rv"><div class="n">04</div><h4 data-i="s4">Personal &amp; Karriere</h4><p data-i="s4p">Recruiting, Fachkräfte, Jobportale</p></div>
+    <div class="rv"><div class="n">05</div><h4 data-i="s5">Gründer &amp; KMU</h4><p data-i="s5p">Existenzgründung, Handwerk, Dienstleister</p></div>
   </div>
 </div></section>
 
-<footer><div class="wrap"><span>© <span id="y"></span> Kunt Solutions UG (haftungsbeschränkt)</span><span><a href="/impressum">Impressum</a> &nbsp;·&nbsp; <a href="/datenschutz" data-i="ds">Datenschutz</a></span></div></footer>
+<section><div class="wrap">
+  <div class="sh"><div><div class="lbl rv" data-i="vk">Vorgehen</div><h2 class="rv" style="margin-top:18px" data-i="vh">In vier Schritten <span class="b">zum Ergebnis.</span></h2></div><p class="rv" data-i="vp">Transparent, mit festen Ansprechpartnern und klaren nächsten Schritten nach jedem Termin.</p></div>
+  <div class="steps" id="steps"><div class="bar"></div>
+    <div class="step rv"><div class="dot">01</div><h4 data-i="p1">Analyse</h4><p data-i="p1p">Wir verstehen Ihr Unternehmen, Ihre Zahlen und Ihre Ziele.</p></div>
+    <div class="step rv"><div class="dot">02</div><h4 data-i="p2">Strategie</h4><p data-i="p2p">Gemeinsam entwickeln wir einen konkreten, machbaren Plan.</p></div>
+    <div class="step rv"><div class="dot">03</div><h4 data-i="p3">Umsetzung</h4><p data-i="p3p">Wir packen mit an – von Prozessen bis zur Software.</p></div>
+    <div class="step rv"><div class="dot">04</div><h4 data-i="p4">Begleitung</h4><p data-i="p4p">Wir messen Ergebnisse und bleiben an Ihrer Seite.</p></div>
+  </div>
+</div></section>
+
+<section id="projekte" style="background:var(--bg)"><div class="wrap">
+  <div class="sh"><div><div class="lbl rv" data-i="jk">Projekte</div><h2 class="rv" style="margin-top:18px" data-i="jh">Aus Beratung <span class="b">werden Unternehmen.</span></h2></div><p class="rv" data-i="jp">Diese Plattformen haben wir selbst aufgebaut. Das Wissen daraus fließt direkt in jede Beratung ein.</p></div>
+  <div class="proj">
+    <a class="pc rv" href="https://www.starkspan.com" target="_blank" rel="noopener" style="--g:linear-gradient(135deg,#1c2a7a,#3a4fd8)"><div class="t" data-i="j1t">INDUSTRIE · SOFTWARE</div><h3>STARKSPAN</h3><p data-i="j1">Kalkulations- und Vertriebsassistent für CNC-Dreh- und Fräsbetriebe: schneller zu belastbaren Angeboten.</p><div class="go">starkspan.com →</div></a>
+    <a class="pc rv" href="https://www.gruendarium.de" target="_blank" rel="noopener" style="--g:linear-gradient(135deg,#0e5a4a,#1fa37f)"><div class="t" data-i="j2t">COACHING · AVGS</div><h3>Gründarium</h3><p data-i="j2">Gründungs- und Karrierecoaching mit AVGS-Gutschein – auf Deutsch, Englisch und Türkisch.</p><div class="go">gruendarium.de →</div></a>
+    <a class="pc rv" href="https://truckparts24.de" target="_blank" rel="noopener" style="--g:linear-gradient(135deg,#7a2e0e,#e0742c)"><div class="t" data-i="j3t">HANDEL · NUTZFAHRZEUGE</div><h3>TRUCKPARTS24</h3><p data-i="j3">LKW-Ersatzteile per OEM-Nummer mit Händlerkonditionen und Direktversand.</p><div class="go">truckparts24.de →</div></a>
+    <a class="pc rv" href="https://kariyersen.de" target="_blank" rel="noopener" style="--g:linear-gradient(135deg,#7a0e1e,#e5484d)"><div class="t" data-i="j4t">PERSONAL · KARRIERE</div><h3>KariyerSen</h3><p data-i="j4">Türkischsprachige Karriereplattform für Deutschland: Jobs, CV-Analyse und Begleitung bis zum Visum.</p><div class="go">kariyersen.de →</div></a>
+  </div>
+</div></section>
+
+<section><div class="wrap why">
+  <div><div class="lbl rv" data-i="wk">Warum Kunt Solutions</div><h2 class="rv" style="margin:18px 0 34px" data-i="wh">Beratung, die <span class="b">umsetzt.</span></h2>
+    <div class="wl">
+      <div class="wi rv"><div class="ck">✓</div><div><b data-i="w1">Praxis statt Folien</b><span data-i="w1p">Wir haben selbst Unternehmen aufgebaut – und wissen, was im Alltag funktioniert.</span></div></div>
+      <div class="wi rv"><div class="ck">✓</div><div><b data-i="w2">Branchenübergreifend</b><span data-i="w2p">Ideen aus Industrie, Handel und Bildung bringen frischen Blick in Ihr Geschäft.</span></div></div>
+      <div class="wi rv"><div class="ck">✓</div><div><b data-i="w3">Mehrsprachig</b><span data-i="w3p">Beratung auf Deutsch, Türkisch und Englisch.</span></div></div>
+    </div></div>
+  <div class="rv"><p class="quote" data-i="q">„Jedes Unternehmen hat ein nächstes Level. Unsere Aufgabe ist es, den Weg dorthin <span class="b">einfach und machbar</span> zu machen.“</p><p class="sig">Halil Kunt · <span data-i="gf">Geschäftsführer</span></p></div>
+</div></section>
+
+<section id="kontakt" style="padding-top:40px"><div class="wrap">
+  <div class="contact rv">
+    <div><div class="lbl" style="color:var(--blue2)" data-i="ck">Kontakt</div><h2 style="margin-top:18px" data-i="ch">Bereit für Ihr Upgrade?</h2><p data-i="cp">Erzählen Sie uns kurz von Ihrem Vorhaben. Wir melden uns innerhalb von zwei Werktagen für ein kostenloses Erstgespräch.</p>
+      <div class="cinfo"><div>✉️ <a href="mailto:info@kuntsolutions.de">info@kuntsolutions.de</a></div><div>📍 Bruckwiesenstraße 17, 90441 Nürnberg</div></div></div>
+    <form id="form" novalidate>
+      <input name="name" required placeholder="Name *" data-p="fn">
+      <input name="company" placeholder="Unternehmen" data-p="fc">
+      <input name="email" type="email" required placeholder="E-Mail *" data-p="fe">
+      <input name="phone" placeholder="Telefon / WhatsApp" data-p="fp">
+      <select name="topic" class="f" id="topic"></select>
+      <textarea name="message" class="f" required placeholder="Ihr Anliegen *" data-p="fm"></textarea>
+      <input name="website" class="hp" tabindex="-1" autocomplete="off">
+      <label class="ok f"><input type="checkbox" name="consent" required><span data-i="fo">Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. <a href="/datenschutz">Datenschutz</a></span></label>
+      <button class="btn p f" type="submit" data-i="fb">Anfrage senden →</button>
+      <div class="msg f" id="msg"></div>
+    </form>
+  </div>
+</div></section>
+
+<footer><div class="wrap"><img src="/assets/logo.png" alt="Kunt Solutions"><span>© <span id="y"></span> Kunt Solutions UG (haftungsbeschränkt) · Nürnberg</span><span><a href="/impressum">Impressum</a> · <a href="/datenschutz" data-i="ds">Datenschutz</a></span></div></footer>
 
 <script>
-const T={tr:{n1:"Markalar",n2:"Yaklaşım",n3:"İletişim",k:"Kunt Solutions UG · Nürnberg",h:"Gerçek sektörler için <em>dijital platformlar.</em>",l:"Uzmanlaşmış yazılımlar, mağazalar ve portallar geliştirip işletiyoruz – her marka kendi odağında, hepsi aynı kalite ve güvenilirlik anlayışıyla.",b1:"Markalarımız",b2:"İletişime geç",
-  mh:"Dört marka. <em>Tek anlayış.</em>",mp:"Her platform, net bir hedef kitle için somut bir sorunu çözer – makine imalatından kariyere kadar.",
-  s1:"Yazılım · CNC imalatı",d1:"CNC torna ve freze atölyeleri için dijital satış ve fiyatlandırma asistanı: teknik çizimi yükle, kendi firma mantığınla hesapla, teklifleri daha hızlı hazırla.",
-  s2:"Koçluk · AVGS",d2:"AVGS kuponu ile girişimcilik ve kariyer koçluğu – Almanca, İngilizce ve Türkçe. İlk fikirden sağlam bir plana kadar.",
-  s3:"E-ticaret · Ticari araçlar",d3:"OEM numarasıyla kamyon yedek parçaları: fiyat, görsel ve stok anında, kişisel bayi indirimleri, sipariş ve belgeler müşteri hesabında.",
-  s4:"Kariyer · Türkçe",d4:"Almanya için Türkçe kariyer platformu: iş ilanları, CV analizi, başvuru dosyaları ve vizeye kadar destek.",
-  hh:"Nasıl <em>çalışıyoruz.</em>",v1:"Odak",v1p:"Her markanın tek bir görevi ve hedef kitlesi var. Her şeyi yapan değil, tam oturan araçlar yapıyoruz.",v2:"Kendi teknolojimiz",v2p:"Geliştirme, işletme ve veriler bizde – Almanya'daki kendi sunucularımızda, hızlı ve veri korumasına duyarlı.",v3:"Güvenilirlik",v3p:"Kısa yollar, net cevaplar, kişisel muhataplar. Söz verdiğimizi tutarız.",
-  q:"„İyi yazılım hissedilmez. Sadece <em>her şeyin kolaylaştığını</em> fark edersin.“",gf:"Genel Müdür",ck:"İletişim",ch:"Hadi <em>konuşalım.</em>",cl:"Almanya",ds:"Gizlilik"},
- en:{n1:"Brands",n2:"Approach",n3:"Contact",k:"Kunt Solutions UG · Nuremberg",h:"Digital platforms for <em>real industries.</em>",l:"We build and run specialised software, shops and portals – each brand with its own focus, all with the same standard of quality and reliability.",b1:"Our brands",b2:"Get in touch",
-  mh:"Four brands. <em>One standard.</em>",mp:"Every platform solves a concrete problem for a clearly defined audience – from machining to careers.",
-  s1:"Software · CNC manufacturing",d1:"The digital sales and costing assistant for CNC turning and milling shops: upload a drawing, calculate with your own company logic, prepare quotes faster.",
-  s2:"Coaching · AVGS",d2:"Start-up and career coaching funded by the AVGS voucher – in German, English and Turkish. From the first idea to a solid plan.",
-  s3:"E-commerce · Commercial vehicles",d3:"Truck spare parts by OEM number: price, image and availability instantly, personal dealer discounts, orders and documents in the customer account.",
-  s4:"Careers · Turkish-speaking",d4:"The Turkish-language career platform for Germany: job listings, CV analysis, application documents and support up to the visa.",
-  hh:"How we <em>work.</em>",v1:"Focus",v1p:"Each brand has one job and one audience. We don't build all-rounders, we build tools that fit.",v2:"Our own technology",v2p:"Development, operations and data stay with us – on our own servers in Germany, fast and privacy-conscious.",v3:"Reliability",v3p:"Short paths, clear answers, personal contacts. We keep what we promise.",
-  q:"“Good software goes unnoticed. You just notice that <em>everything gets easier</em>.”",gf:"Managing Director",ck:"Contact",ch:"Let's <em>talk.</em>",cl:"Germany",ds:"Privacy"}};
-const DE={};document.querySelectorAll('[data-i]').forEach(e=>DE[e.dataset.i]=e.innerHTML);T.de=DE;
-function setL(l){document.documentElement.lang=l;document.querySelectorAll('[data-i]').forEach(e=>{const v=T[l][e.dataset.i];if(v!=null)e.innerHTML=v});document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));try{localStorage.setItem('ks-lang',l)}catch(e){}}
+const TOP={de:["Gründung & Aufbau","Strategie & Wachstum","Digitalisierung & Prozesse","Vertrieb & Marketing","Personal & Fachkräfte","Förderung & Finanzierung","Sonstiges"],tr:["Kuruluş ve yapılanma","Strateji ve büyüme","Dijitalleşme ve süreçler","Satış ve pazarlama","Personel ve kalifiye eleman","Teşvik ve finansman","Diğer"],en:["Founding & set-up","Strategy & growth","Digitalisation & processes","Sales & marketing","People & skilled workers","Funding & finance","Other"]};
+const TICK={de:["Gründung","Strategie","Digitalisierung","Vertrieb","Personal","Förderung","Industrie","Handel","Bildung","Karriere"],tr:["Kuruluş","Strateji","Dijitalleşme","Satış","Personel","Teşvik","Sanayi","Ticaret","Eğitim","Kariyer"],en:["Founding","Strategy","Digitalisation","Sales","People","Funding","Industry","Trade","Education","Careers"]};
+const T={tr:{m1:"Hizmetler",m2:"Sektörler",m3:"Projeler",m4:"Danışmanlık talep et",k:"İşletme danışmanlığı · Nürnberg",h:"Upgrade your <span class='b'>business.</span>",l:"Çok farklı sektörlerde şirketlere ve girişimcilere danışmanlık veriyoruz – fikirden strateji, süreç ve dijitalleşmeye, uygulamaya kadar. Pratik, kişisel ve sonuç odaklı.",b1:"Ücretsiz ön görüşme",b2:"Hizmetlerimiz",
+ lk:"Hizmetler",lh:"Şirketinizin her aşaması için <span class='b'>çözümler.</span>",lp:"Kuruluş, büyüme ya da yeniden yapılanma: Sanayi, ticaret, eğitim ve personel tecrübemizle sizinle birlikte analiz ediyor, planlıyor ve uyguluyoruz.",
+ c1:"Kuruluş ve yapılanma",c1p:"İş modelinden iş planına, şirket türünden Almanya pazarına girişe kadar.",c1l:"<li>İş planı</li><li>Şirket türü</li><li>Pazara giriş</li>",c2:"Strateji ve büyüme",c2p:"Net hedefler, güçlü konumlanma ve ciroyu ölçülebilir şekilde artıran bir plan.",c2l:"<li>Konumlanma</li><li>Fiyatlar</li><li>Büyüme</li>",
+ c3:"Dijitalleşme ve süreçler",c3p:"Süreçleri sadeleştirmek, yazılımı doğru kullanmak, zaman ve maliyetten tasarruf.",c3l:"<li>Süreçler</li><li>Yazılım</li><li>Otomasyon</li>",c4:"Satış ve pazarlama",c4p:"Daha fazla talep, daha iyi teklifler, satan bir görünüm – online ve offline.",c4l:"<li>Web sitesi</li><li>Müşteri adayları</li><li>Teklifler</li>",
+ c5:"Personel ve kalifiye eleman",c5p:"Doğru çalışanları bulmak – uluslararası kalifiye elemanlar dahil, işe başlayana kadar destek.",c5l:"<li>İşe alım</li><li>Kalifiye eleman</li><li>Uyum</li>",c6:"Teşvik ve finansman",c6p:"Teşvikler, hibeler ve AVGS ile koçluk – projeniz için doğru yolları buluyoruz.",c6l:"<li>AVGS</li><li>Teşvik kredileri</li><li>Hibeler</li>",
+ bk:"Sektörler",bh:"Farklı alanlardan <span class='b'>tecrübe.</span>",bp:"Pratiği biliyoruz – çünkü bu sektörlerde kendimiz projeler kurduk.",s1:"Sanayi ve imalat",s1p:"CNC atölyeleri, tedarikçiler, makine imalatı",s2:"Ticaret ve lojistik",s2p:"Ticari araçlar, yedek parça, online ticaret",s3:"Eğitim ve koçluk",s3p:"Eğitim kurumları, koçlar, AVGS programları",s4:"Personel ve kariyer",s4p:"İşe alım, kalifiye eleman, iş portalları",s5:"Girişimci ve KOBİ",s5p:"Şirket kuruluşu, zanaat, hizmet sektörü",
+ vk:"Yöntem",vh:"Dört adımda <span class='b'>sonuca.</span>",vp:"Şeffaf, sabit muhataplarla ve her görüşmeden sonra net sonraki adımlarla.",p1:"Analiz",p1p:"Şirketinizi, rakamlarınızı ve hedeflerinizi anlıyoruz.",p2:"Strateji",p2p:"Birlikte somut, uygulanabilir bir plan geliştiriyoruz.",p3:"Uygulama",p3p:"Süreçlerden yazılıma kadar işin içinde oluyoruz.",p4:"Takip",p4p:"Sonuçları ölçüyor ve yanınızda kalıyoruz.",
+ jk:"Projeler",jh:"Danışmanlıktan <span class='b'>şirketler doğuyor.</span>",jp:"Bu platformları kendimiz kurduk. Buradan gelen bilgi doğrudan her danışmanlığa yansıyor.",j1t:"SANAYİ · YAZILIM",j1:"CNC torna ve freze atölyeleri için fiyatlandırma ve satış asistanı: güvenilir tekliflere daha hızlı.",j2t:"KOÇLUK · AVGS",j2:"AVGS kuponu ile girişimcilik ve kariyer koçluğu – Almanca, İngilizce ve Türkçe.",j3t:"TİCARET · TİCARİ ARAÇLAR",j3:"OEM numarasıyla kamyon yedek parçaları, bayi koşulları ve doğrudan gönderim.",j4t:"PERSONEL · KARİYER",j4:"Almanya için Türkçe kariyer platformu: iş ilanları, CV analizi ve vizeye kadar destek.",
+ wk:"Neden Kunt Solutions",wh:"Uygulayan <span class='b'>danışmanlık.</span>",w1:"Slayt değil pratik",w1p:"Kendimiz şirketler kurduk – günlük hayatta neyin işe yaradığını biliyoruz.",w2:"Sektörler arası",w2p:"Sanayi, ticaret ve eğitimden gelen fikirler işinize taze bir bakış getirir.",w3:"Çok dilli",w3p:"Almanca, Türkçe ve İngilizce danışmanlık.",
+ q:"„Her şirketin bir sonraki seviyesi vardır. Bizim işimiz oraya giden yolu <span class='b'>kolay ve uygulanabilir</span> kılmak.“",gf:"Genel Müdür",ck:"İletişim",ch:"Yükselmeye hazır mısınız?",cp:"Projenizi kısaca anlatın. İki iş günü içinde ücretsiz bir ön görüşme için size dönüyoruz.",fo:"Bilgilerimin talebin işlenmesi için kaydedilmesini kabul ediyorum. <a href='/datenschutz'>Gizlilik</a>",fb:"Talebi gönder →",ds:"Gizlilik",
+ ph:{fn:"Ad Soyad *",fc:"Şirket",fe:"E-posta *",fp:"Telefon / WhatsApp",fm:"Talebiniz *"},ok:"Teşekkürler! Talebiniz bize ulaştı. En kısa sürede dönüyoruz.",err:"Gönderilemedi. Lütfen e-posta ile yazın: info@kuntsolutions.de",need:"Lütfen ad, e-posta, mesaj ve onayı doldurun.",send:"Gönderiliyor …"},
+ en:{m1:"Services",m2:"Industries",m3:"Projects",m4:"Request consulting",k:"Business consulting · Nuremberg",h:"Upgrade your <span class='b'>business.</span>",l:"We advise companies and founders across very different industries – from the idea to strategy, processes and digitalisation all the way to implementation. Practical, personal and results-driven.",b1:"Free first meeting",b2:"Our services",
+ lk:"Services",lh:"Solutions for every stage <span class='b'>of your business.</span>",lp:"Whether you are founding, growing or restructuring: we analyse, plan and implement together with you – with experience from industry, trade, education and HR.",
+ c1:"Founding & set-up",c1p:"From business model, business plan and legal form to entering the German market.",c1l:"<li>Business plan</li><li>Legal form</li><li>Market entry</li>",c2:"Strategy & growth",c2p:"Clear goals, strong positioning and a plan that measurably grows revenue and profit.",c2l:"<li>Positioning</li><li>Pricing</li><li>Expansion</li>",
+ c3:"Digitalisation & processes",c3p:"Simplify workflows, use software wisely, save time and cost.",c3l:"<li>Processes</li><li>Software</li><li>Automation</li>",c4:"Sales & marketing",c4p:"More enquiries, better quotes, a presence that sells – online and offline.",c4l:"<li>Website</li><li>Leads</li><li>Quotes</li>",
+ c5:"People & skilled workers",c5p:"Find the right employees – including international skilled workers, with support until their first day.",c5l:"<li>Recruiting</li><li>Skilled workers</li><li>Onboarding</li>",c6:"Funding & finance",c6p:"Grants, subsidies and coaching via AVGS – we find the right path for your project.",c6l:"<li>AVGS</li><li>Development loans</li><li>Grants</li>",
+ bk:"Industries",bh:"Experience from <span class='b'>different sectors.</span>",bp:"We know the practice – because we built projects in these industries ourselves.",s1:"Industry & manufacturing",s1p:"CNC shops, suppliers, engineering",s2:"Trade & logistics",s2p:"Commercial vehicles, spare parts, e-commerce",s3:"Education & coaching",s3p:"Training providers, coaches, AVGS programmes",s4:"HR & careers",s4p:"Recruiting, skilled workers, job portals",s5:"Founders & SMEs",s5p:"Start-ups, crafts, service providers",
+ vk:"Approach",vh:"Four steps <span class='b'>to results.</span>",vp:"Transparent, with fixed contacts and clear next steps after every meeting.",p1:"Analysis",p1p:"We understand your business, your numbers and your goals.",p2:"Strategy",p2p:"Together we develop a concrete, feasible plan.",p3:"Implementation",p3p:"We roll up our sleeves – from processes to software.",p4:"Support",p4p:"We measure results and stay by your side.",
+ jk:"Projects",jh:"Consulting <span class='b'>turned into companies.</span>",jp:"We built these platforms ourselves. What we learned flows straight into every engagement.",j1t:"INDUSTRY · SOFTWARE",j1:"Costing and sales assistant for CNC turning and milling shops: faster to reliable quotes.",j2t:"COACHING · AVGS",j2:"Start-up and career coaching with the AVGS voucher – in German, English and Turkish.",j3t:"TRADE · COMMERCIAL VEHICLES",j3:"Truck spare parts by OEM number with dealer terms and drop shipping.",j4t:"HR · CAREERS",j4:"Turkish-language career platform for Germany: jobs, CV analysis and support up to the visa.",
+ wk:"Why Kunt Solutions",wh:"Consulting that <span class='b'>delivers.</span>",w1:"Practice, not slides",w1p:"We have built companies ourselves – and know what works day to day.",w2:"Cross-industry",w2p:"Ideas from industry, trade and education bring a fresh view to your business.",w3:"Multilingual",w3p:"Consulting in German, Turkish and English.",
+ q:"“Every company has a next level. Our job is to make the way there <span class='b'>simple and achievable</span>.”",gf:"Managing Director",ck:"Contact",ch:"Ready for your upgrade?",cp:"Tell us briefly about your plans. We'll get back to you within two working days for a free first meeting.",fo:"I agree that my details are stored to handle my request. <a href='/datenschutz'>Privacy</a>",fb:"Send request →",ds:"Privacy",
+ ph:{fn:"Name *",fc:"Company",fe:"Email *",fp:"Phone / WhatsApp",fm:"Your request *"},ok:"Thank you! We received your request and will get back to you shortly.",err:"Could not send. Please email info@kuntsolutions.de",need:"Please fill in name, email, message and consent.",send:"Sending …"}};
+const DE={ph:{},ok:"Vielen Dank! Ihre Anfrage ist bei uns angekommen. Wir melden uns in Kürze.",err:"Senden fehlgeschlagen. Bitte schreiben Sie an info@kuntsolutions.de",need:"Bitte Name, E-Mail, Nachricht und Einwilligung ausfüllen.",send:"Wird gesendet …"};
+document.querySelectorAll('[data-i]').forEach(e=>DE[e.dataset.i]=e.innerHTML);document.querySelectorAll('[data-p]').forEach(e=>DE.ph[e.dataset.p]=e.placeholder);T.de=DE;
+let L='de';
+function setL(l){L=l;document.documentElement.lang=l;document.querySelectorAll('[data-i]').forEach(e=>{const v=T[l][e.dataset.i];if(v!=null)e.innerHTML=v});document.querySelectorAll('[data-p]').forEach(e=>{const v=T[l].ph[e.dataset.p];if(v)e.placeholder=v});
+  document.getElementById('topic').innerHTML=TOP[l].map(t=>'<option>'+t+'</option>').join('');const w=TICK[l].map(t=>'<span>'+t+'</span><i>◆</i>').join('');document.getElementById('tick').innerHTML=w+w;
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));try{localStorage.setItem('ks-lang',l)}catch(e){}}
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>setL(b.dataset.l));
-try{const s=localStorage.getItem('ks-lang')||((navigator.language||'').startsWith('tr')?'tr':'');if(s&&s!=='de')setL(s)}catch(e){}
+let st='de';try{st=localStorage.getItem('ks-lang')||((navigator.language||'').startsWith('tr')?'tr':'de')}catch(e){}setL(T[st]?st:'de');
 document.getElementById('y').textContent=new Date().getFullYear();
 const nav=document.getElementById('nav');addEventListener('scroll',()=>nav.classList.toggle('s',scrollY>30),{passive:true});
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
-document.querySelectorAll('.rv').forEach((e,i)=>{e.style.transitionDelay=(i%4)*90+'ms';io.observe(e)});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.rv,#steps').forEach((e,i)=>{if(e.classList.contains('rv'))e.style.transitionDelay=(i%3)*90+'ms';io.observe(e)});
+// Karten folgen der Maus
+document.querySelectorAll('.card').forEach(c=>{c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');c.style.transform='perspective(800px) rotateX('+((.5-y)*6)+'deg) rotateY('+((x-.5)*6)+'deg) translateY(-4px)'});c.addEventListener('pointerleave',()=>c.style.transform='')});
+// Hero: bewegte Streifen wie im Logo
+(()=>{const cv=document.getElementById('fx'),x=cv.getContext('2d');let W,H,dpr,bars=[],mx=.5,my=.5,t=0;
+  function size(){dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);bars=[];const n=Math.round(W/70);for(let i=0;i<n;i++)bars.push({p:Math.random(),s:.00025+Math.random()*.0006,w:2+Math.random()*10,len:.25+Math.random()*.5,o:.04+Math.random()*.1,d:Math.random()<.5})}
+  size();addEventListener('resize',size);addEventListener('pointermove',e=>{mx=e.clientX/innerWidth;my=e.clientY/innerHeight},{passive:true});
+  const red=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function draw(){t++;x.clearRect(0,0,W,H);const ang=-Math.PI/3.2;for(const b of bars){if(!red)b.p=(b.p+b.s)%1.4;const cx=(b.p-.2)*W*1.3+(mx-.5)*40,cy=H*.5+(my-.5)*30,L=H*b.len*1.6,dx=Math.cos(ang)*L,dy=Math.sin(ang)*L;
+      const g=x.createLinearGradient(cx-dx,cy-dy,cx+dx,cy+dy);g.addColorStop(0,'rgba(58,79,216,0)');g.addColorStop(.5,b.d?'rgba(20,28,85,'+b.o+')':'rgba(111,130,255,'+(b.o*1.3)+')');g.addColorStop(1,'rgba(58,79,216,0)');
+      x.strokeStyle=g;x.lineWidth=b.w;x.lineCap='round';x.beginPath();x.moveTo(cx-dx,cy-dy);x.lineTo(cx+dx,cy+dy);x.stroke()}
+    if(!red)requestAnimationFrame(draw)}draw()})();
+// Formular
+const f=document.getElementById('form'),msg=document.getElementById('msg');
+f.addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(f));d.consent=!!f.consent.checked;d.lang=L;
+  if(!d.name||!d.email||!d.message||!d.consent){msg.textContent=T[L].need;return}
+  msg.textContent=T[L].send;const b=f.querySelector('button');b.disabled=true;
+  try{const r=await fetch('/api/kontakt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});if(!r.ok)throw 0;msg.textContent=T[L].ok;f.reset()}catch(err){msg.textContent=T[L].err}b.disabled=false});
 </script>
 </body>
 </html>

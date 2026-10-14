@@ -1,6 +1,8 @@
 FROM node:22-alpine
 WORKDIR /app
 COPY . .
+ENV DATA_DIR=/app/data
+RUN mkdir -p /app/data && chown -R node:node /app/data
 ENV PORT=3000
 EXPOSE 3000
 USER node
