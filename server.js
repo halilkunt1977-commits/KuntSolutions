@@ -3,7 +3,7 @@
 // (sonst info@kuntsolutions.de): bevorzugt über SMTP (Strato: SMTP_HOST=smtp.strato.de, SMTP_PORT=465,
 // SMTP_USER, SMTP_PASS), sonst über Resend (RESEND_API_KEY, MAIL_FROM).
 const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os"), zlib = require("zlib"), crypto = require("crypto");
-const { confirmMail } = require("./mails");
+const { confirmMail, leadMail } = require("./mails");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html", "/signatur": "email/signatur.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
@@ -130,8 +130,10 @@ async function mailtest(url, res) {
   try {
     // Testmail zeigt die echte Kunden-Bestätigung mit Beispieldaten (Sprache über ?lang=de|tr|en)
     const c = confirmMail({ name: "Halil Kunt", company: "Muster GmbH", topic: "Gründung & Aufbau", lang: url.searchParams.get("lang") || "de", message: "Testmail: So sieht die automatische Bestätigung aus, die Kunden nach einer Anfrage bekommen." });
+    const n = leadMail({ ts: new Date().toISOString(), name: "Halil Kunt", company: "Muster GmbH", email: to[0], phone: "0176 00000000", topic: "Gründung & Aufbau", lang: "de", message: "Testmail: So sieht eine neue Anfrage bei dir aus.\nZweite Zeile der Nachricht." });
+    await sendMail({ to, subject: "[Test] " + n.subject, text: n.text, html: n.html });
     await sendMail({ to, subject: "[Test] " + c.subject, text: c.text, html: c.html });
-    out(200, "Gesendet an " + to.join(", ") + " über " + mailInfo() + ". Bitte Postfach (auch Spam) prüfen.\nSpeicher: " + store());
+    out(200, "2 Testmails (neue Anfrage + Kunden-Bestätigung) gesendet an " + to.join(", ") + " über " + mailInfo() + ". Bitte Postfach (auch Spam) prüfen.\nSpeicher: " + store());
   } catch (e) { out(500, "Fehler beim Senden über " + mailInfo() + ":\n" + e.message); }
 }
 function anfragen(url, res) {
@@ -155,11 +157,7 @@ async function kontakt(req, res) {
   const spam = !!d.ks_hp || (typeof d.el === "number" && d.el < 3000);
   const a = { ts: new Date().toISOString(), name: clean(d.name, 120), company: clean(d.company, 160), email: clean(d.email, 200), phone: clean(d.phone, 60), topic: clean(d.topic, 80), message: clean(d.message, 4000), lang: clean(d.lang, 5) };
   if (!a.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email) || !a.message || d.consent !== true) return json(400, { error: "Pflichtfelder fehlen." });
-  const rows = [["Name", a.name], ["Unternehmen", a.company || "–"], ["E-Mail", a.email], ["Telefon", a.phone || "–"], ["Thema", a.topic || "–"], ["Nachricht", a.message]];
-  const to = kontaktTo();
-  const subject = `Neue Beratungsanfrage: ${a.topic || "Allgemein"} – ${a.name}${a.company ? " (" + a.company + ")" : ""}`;
-  const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
-  const html = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:24px;color:#0f1430"><div style="font-size:20px;font-weight:800;color:#141c55">KUNT SOLUTIONS · Neue Anfrage</div><table style="margin-top:16px;border-collapse:collapse;font-size:15px">${rows.map(([k, v]) => `<tr><td style="padding:6px 14px 6px 0;color:#5d6385;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;white-space:pre-wrap">${esc(v)}</td></tr>`).join("")}</table><p style="color:#5d6385;font-size:13px">Mit „Antworten“ schreiben Sie direkt an ${esc(a.email)}.</p></div>`;
+  const to = kontaktTo(), { subject, text, html } = leadMail(a);
   let mail = "spam", conf = "–";
   if (!spam) {
     const own = sendMail({ to, replyTo: a.email, subject, text, html }).then((r) => (r ? "ok" : "aus"), (e) => (console.error("Mail fehlgeschlagen:", e.message), e.message));

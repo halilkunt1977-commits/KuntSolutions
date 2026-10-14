@@ -80,7 +80,42 @@ ${t.steps.map(([h, p], i) => `<table role="presentation" cellpadding="0" cellspa
   return { subject: t.subj, html, text };
 }
 
-module.exports = { signature, confirmMail };
+// Benachrichtigung an uns bei neuer Anfrage: gleiches Design, mit Schnell-Aktionen
+function leadMail(a) {
+  const tel = String(a.phone || "").replace(/[^\d+]/g, ""), wa = tel.replace(/^\+/, "").replace(/^00/, "").replace(/^0/, "49");
+  const subject = `Neue Beratungsanfrage: ${a.topic || "Allgemein"} – ${a.name}${a.company ? " (" + a.company + ")" : ""}`;
+  const rows = [["E-Mail", a.email], ["Telefon", a.phone], ["Unternehmen", a.company], ["Thema", a.topic], ["Sprache", { de: "Deutsch", tr: "Türkisch", en: "Englisch" }[a.lang] || a.lang]].filter((r) => r[1]);
+  const btn = (href, label, dark) => `<a href="${esc(href)}" style="display:inline-block;${F};font-size:14px;font-weight:bold;text-decoration:none;border-radius:10px;padding:11px 16px;margin:0 8px 8px 0;${dark ? `background:${NAVY};color:#ffffff;border:1px solid ${NAVY}` : `background:#eef1ff;color:${NAVY};border:1px solid #d5dbff`}">${label}</a>`;
+  const when = new Date(a.ts || Date.now()).toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "full", timeStyle: "short" });
+  const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(subject)}</title></head>
+<body style="margin:0;padding:0;background:#f3f5fb">
+<div style="display:none;max-height:0;overflow:hidden">${esc(a.name)}: ${esc(String(a.message).slice(0, 140))}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f5fb"><tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;${F}">
+<tr><td style="padding:20px 32px;border-bottom:1px solid ${LINE}"><a href="${SITE}"><img src="${SITE}/assets/wordmark.png" width="190" alt="KUNT SOLUTIONS" style="display:block;width:190px;height:auto;border:0"></a></td></tr>
+<tr><td bgcolor="${NAVY}" style="background:${NAVY};background-image:linear-gradient(135deg,#0b1038,${NAVY} 55%,${BLUE});padding:30px 32px">
+<div style="font-size:12px;letter-spacing:3px;color:#9fb0ff">🔔 NEUE ANFRAGE${a.topic ? " · " + esc(String(a.topic).toUpperCase()) : ""}</div>
+<div style="font-size:28px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:10px">${esc(a.name)}</div>
+${a.company ? `<div style="font-size:16px;color:#c9d0f5;padding-top:4px">${esc(a.company)}</div>` : ""}
+<div style="font-size:13px;color:#9fa8d8;padding-top:10px">${esc(when)}</div></td></tr>
+<tr><td style="padding:26px 32px 4px">
+<div style="font-size:12px;letter-spacing:2px;color:${BLUE};font-weight:bold;padding-bottom:10px">NACHRICHT</div>
+<div style="background:#f7f8fc;border:1px solid ${LINE};border-left:4px solid ${BLUE};border-radius:12px;padding:16px 18px;font-size:15px;line-height:1.6;color:#0f1430;white-space:pre-wrap">${esc(a.message)}</div></td></tr>
+<tr><td style="padding:22px 32px 4px">
+<div style="font-size:12px;letter-spacing:2px;color:${BLUE};font-weight:bold;padding-bottom:10px">KONTAKT</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${LINE};border-radius:12px">
+${rows.map(([k, v], i) => `<tr><td style="padding:11px 16px;${i ? `border-top:1px solid ${LINE};` : ""}font-size:13px;color:${MUTE};width:110px">${esc(k)}</td><td style="padding:11px 16px;${i ? `border-top:1px solid ${LINE};` : ""}font-size:14px;color:#0f1430">${k === "E-Mail" ? `<a href="mailto:${esc(v)}" style="color:${BLUE};text-decoration:none">${esc(v)}</a>` : k === "Telefon" && tel ? `<a href="tel:${esc(tel)}" style="color:${BLUE};text-decoration:none">${esc(v)}</a>` : esc(v)}</td></tr>`).join("")}
+</table></td></tr>
+<tr><td style="padding:22px 32px 6px">
+${btn(`mailto:${a.email}?subject=${encodeURIComponent("Re: Ihre Anfrage bei Kunt Solutions")}`, "✉️ Antworten", true)}${tel ? btn(`tel:${tel}`, "📞 Anrufen") + btn(`https://wa.me/${wa}`, "💬 WhatsApp") : ""}
+<div style="font-size:12px;color:${MUTE};padding-top:6px">Der Kunde hat automatisch eine Eingangsbestätigung bekommen. „Antworten“ in deinem Mailprogramm geht direkt an ${esc(a.email)}.</div></td></tr>
+<tr><td style="padding:22px 32px 30px"><div style="border-top:1px solid ${LINE};padding-top:22px">${signature("de", { cta: false })}</div></td></tr>
+</table></td></tr></table></body></html>`;
+  const text = `Neue Anfrage von ${a.name}${a.company ? " (" + a.company + ")" : ""}\n${when}\n\n${a.message}\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}`;
+  return { subject, html, text };
+}
+
+module.exports = { signature, confirmMail, leadMail };
 
 if (require.main === module) {
   const fs = require("fs"), path = require("path"), dir = path.join(__dirname, "email");
