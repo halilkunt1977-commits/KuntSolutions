@@ -1,0 +1,8 @@
+{
+  "name": "kuntsolutions",
+  "private": true,
+  "version": "1.0.0",
+  "description": "kuntsolutions.de – Firmenseite der Kunt Solutions UG",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}

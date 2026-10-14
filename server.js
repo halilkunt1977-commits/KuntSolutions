@@ -15,4 +15,4 @@ http.createServer((req, res) => {
   const ext = path.extname(name);
   res.writeHead(200, { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=86400", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin" });
   fs.createReadStream(path.join(ROOT, name)).pipe(res);
-}).listen(PORT, () => console.log("Kunt Solutions läuft auf Port " + PORT));
+}).listen(PORT, "0.0.0.0", () => console.log("Kunt Solutions läuft auf Port " + PORT));
