@@ -419,7 +419,7 @@ footer img{height:52px}
       <input name="phone" placeholder="Telefon / WhatsApp" data-p="fp">
       <select name="topic" class="f" id="topic"></select>
       <textarea name="message" class="f" required placeholder="Ihr Anliegen *" data-p="fm"></textarea>
-      <input name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input name="ks_hp" class="hp" tabindex="-1" autocomplete="new-password" aria-hidden="true">
       <label class="ok f"><input type="checkbox" name="consent" required><span data-i="fo">Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. <a href="/datenschutz">Datenschutz</a></span></label>
       <button class="btn p f" type="submit" data-i="fb">Anfrage senden →</button>
       <div class="msg f" id="msg"></div>
@@ -621,7 +621,7 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches)document.querySelector
   requestAnimationFrame(draw)})();
 // Formular
 const f=document.getElementById('form'),msg=document.getElementById('msg');
-f.addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(f));d.consent=!!f.consent.checked;d.lang=L;
+f.addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(f));d.consent=!!f.consent.checked;d.lang=L;d.el=Math.round(performance.now());
   if(!d.name||!d.email||!d.message||!d.consent){msg.textContent=T[L].need;return}
   msg.textContent=T[L].send;const b=f.querySelector('button');b.disabled=true;
   try{const r=await fetch('/api/kontakt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});if(!r.ok)throw 0;msg.textContent=T[L].ok;f.reset()}catch(err){msg.textContent=T[L].err}b.disabled=false});
