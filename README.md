@@ -26,3 +26,6 @@ Beim Start steht im Log, ob die Mail eingerichtet ist. Anfragen liegen in `DATA_
 ## Bestätigung an Kunden und Signatur
 Jede Anfrage bekommt automatisch eine Eingangsbestätigung in der Sprache der Seite (`mails.js`, `confirmMail`), höchstens eine pro Adresse in 10 Minuten und 40 pro Stunde.
 `node mails.js` erzeugt `email/signatur.html` (Signatur für Outlook) und `email/vorschau.html` (Vorschau der Bestätigung).
+
+## Partner & Marken
+Partnerkarten zeigen ein Bild der echten Webseite (`/ref/<id>.jpg`, über WordPress mShots) und das Icon der Seite (`/ref/<id>-logo.png`), vom Server geladen und 14 Tage in `DATA_DIR/ref` gespeichert. Eigene Dateien `assets/ref/<id>.jpg` bzw. `<id>-logo.png` haben Vorrang. Partner stehen in `REFS` (server.js) und im Abschnitt `#referenzen` (index.html). Logos der eigenen Marken liegen in `assets/brands/`.

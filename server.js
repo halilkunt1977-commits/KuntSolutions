@@ -28,6 +28,27 @@ async function foto(n) {
   })().finally(() => setTimeout(() => LOADING.delete(n), 60000)));
   return LOADING.get(n);
 }
+// Partnerfirmen: /ref/<id>.jpg = Bild der echten Webseite (WordPress mShots), /ref/<id>-logo.png = Logo/Icon der Seite (Google).
+// Eigene Dateien in assets/ref/<id>.jpg bzw. <id>-logo.png haben Vorrang; geladene Bilder liegen 14 Tage in DATA_DIR/ref.
+const REFS = { anil: "https://anilmakina.com", apar: "https://aparotomotiv.com", ppmtek: "https://www.ppmtek.com", bm: "https://www.bmpremiumparts.de" };
+async function refImg(id, logo, req, res) {
+  const name = id + (logo ? "-logo.png" : ".jpg"), own = path.join(ROOT, "assets/ref", name), f = path.join(DATA_DIR, "ref", name);
+  const send = (file, type) => { res.writeHead(200, { "Content-Type": type, "Cache-Control": "public, max-age=86400" }); fs.createReadStream(file).pipe(res); };
+  if (fs.existsSync(own)) return send(own, logo ? "image/png" : "image/jpeg");
+  if (fs.existsSync(f) && Date.now() - fs.statSync(f).mtimeMs < 14 * 864e5) return send(f, logo ? "image/png" : "image/jpeg");
+  try {
+    const host = new URL(REFS[id]).hostname;
+    const src = logo ? `https://www.google.com/s2/favicons?domain=${host}&sz=128` : `https://s.wordpress.com/mshots/v1/${encodeURIComponent(REFS[id])}?w=1200&h=750`;
+    const r = await fetch(src, { signal: AbortSignal.timeout(20000) }), type = r.headers.get("content-type") || "", buf = Buffer.from(await r.arrayBuffer());
+    // mShots liefert ein GIF-Platzhalterbild, solange die Aufnahme noch läuft – das nicht speichern
+    if (!r.ok || !/image\/(jpeg|png)/.test(type) || buf.length < (logo ? 200 : 8000)) throw new Error("noch kein Bild (" + type + ", " + buf.length + " B)");
+    fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, buf);
+    res.writeHead(200, { "Content-Type": type, "Cache-Control": "public, max-age=86400" }); res.end(buf);
+  } catch (e) {
+    if (fs.existsSync(f)) return send(f, logo ? "image/png" : "image/jpeg");
+    res.writeHead(404, { "Cache-Control": "no-store" }); res.end();
+  }
+}
 async function fotoRoute(n, req, res) {
   try {
     const f = await foto(n);
@@ -186,8 +207,10 @@ http.createServer((req, res) => {
   if (url.pathname === "/anfragen") return anfragen(url, res);
   const fm = url.pathname.match(/^\/img\/(\w+)\.jpg$/);
   if (fm && FOTOS[fm[1]]) return fotoRoute(fm[1], req, res);
+  const rm = url.pathname.match(/^\/ref\/(\w+?)(-logo)?\.(jpg|png)$/);
+  if (rm && REFS[rm[1]]) return refImg(rm[1], !!rm[2], req, res);
   let name = PAGES[url.pathname] || url.pathname.replace(/^\/+/, "");
-  const ok = PUBLIC.has(name) || (/^assets\/(img\/)?[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
+  const ok = PUBLIC.has(name) || (/^assets\/(img\/|ref\/|brands\/)?[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
   if (!ok) { res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" }); return fs.createReadStream(path.join(ROOT, "index.html")).pipe(res); }
   const ext = path.extname(name), file = path.join(ROOT, name);
   const head = { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=2592000, immutable", "X-Content-Type-Options": "nosniff", ...(name.startsWith("email/") ? { "X-Robots-Tag": "noindex" } : {}), "Referrer-Policy": "strict-origin-when-cross-origin", Vary: "Accept-Encoding" };
