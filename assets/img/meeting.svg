@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141c55"/><stop offset="1" stop-color="#2a37a8"/></linearGradient></defs>
+<rect width="400" height="300" rx="24" fill="url(#bg2)"/>
+<g stroke="#ffffff" stroke-opacity=".06"><path d="M0 60h400M0 120h400M0 180h400M0 240h400M80 0v300M160 0v300M240 0v300M320 0v300"/></g>
+<!-- Präsentationstafel -->
+<rect x="120" y="30" width="200" height="120" rx="10" fill="#fff"/>
+<rect x="136" y="46" width="70" height="8" rx="4" fill="#141c55"/>
+<polyline points="140,130 170,110 196,118 224,88 252,96 300,58" fill="none" stroke="#3a4fd8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="300" cy="58" r="7" fill="#38b886"/>
+<g fill="#e4e8fb"><rect x="230" y="114" width="16" height="22" rx="2"/><rect x="252" y="104" width="16" height="32" rx="2"/><rect x="274" y="92" width="16" height="44" rx="2"/></g>
+<circle cx="164" cy="80" r="16" fill="none" stroke="#6f82ff" stroke-width="10" stroke-dasharray="60 41"/>
+<!-- Tisch -->
+<ellipse cx="200" cy="246" rx="170" ry="26" fill="#0b1038"/>
+<!-- Personen -->
+<g><path d="M40 246c0-38 12-60 36-60s36 22 36 60z" fill="#6f82ff"/><circle cx="76" cy="166" r="20" fill="#c98b62"/><path d="M56 162c0-14 9-22 20-22 12 0 20 8 20 18-10-2-24-4-40 4z" fill="#1f140d"/></g>
+<g><path d="M288 246c0-38 12-60 36-60s36 22 36 60z" fill="#f08a3e"/><circle cx="324" cy="166" r="20" fill="#f2c39b"/><path d="M304 170c-4-22 6-32 20-32 16 0 24 12 20 32-4-10-8-16-20-16s-16 6-20 16z" fill="#7a3f17"/><path d="M304 170c-2 14 0 26 4 32M344 170c2 14 0 26-4 32" stroke="#7a3f17" stroke-width="7" stroke-linecap="round"/></g>
+<g><path d="M162 250c0-30 14-48 38-48s38 18 38 48z" fill="#fff"/><circle cx="200" cy="184" r="19" fill="#e9b48a"/><path d="M181 180c0-12 8-20 19-20s19 8 19 18c-8-5-24-6-38 2z" fill="#3b2a1e"/></g>
+<!-- Laptops -->
+<path d="M96 236l10-26h40l-10 26z" fill="#c9d2ff"/><path d="M264 236l-10-26h-40l10 26z" fill="#c9d2ff"/>
+<!-- Sprechblasen -->
+<g transform="translate(18 112)"><rect width="58" height="30" rx="10" fill="#fff"/><path d="M14 30l6 8 4-8z" fill="#fff"/><rect x="10" y="10" width="38" height="4" rx="2" fill="#3a4fd8"/><rect x="10" y="18" width="24" height="4" rx="2" fill="#c9d2ff"/></g>
+<g transform="translate(330 104)"><rect width="56" height="30" rx="10" fill="#38b886"/><path d="M38 30l-6 8-4-8z" fill="#38b886"/><path d="M18 15l7 7 13-12" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

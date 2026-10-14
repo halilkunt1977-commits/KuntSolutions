@@ -95,7 +95,7 @@ http.createServer((req, res) => {
   if (host.startsWith("www.")) { res.writeHead(301, { Location: "https://" + host.slice(4) + req.url }); return res.end(); }
   if (url.pathname === "/api/kontakt" && req.method === "POST") return kontakt(req, res);
   let name = PAGES[url.pathname] || url.pathname.replace(/^\/+/, "");
-  const ok = PUBLIC.has(name) || (/^assets\/[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
+  const ok = PUBLIC.has(name) || (/^assets\/(img\/)?[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
   if (!ok) { res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" }); return fs.createReadStream(path.join(ROOT, "index.html")).pipe(res); }
   const ext = path.extname(name), file = path.join(ROOT, name);
   const head = { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=2592000, immutable", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", Vary: "Accept-Encoding" };

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<defs><linearGradient id="h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff4ea"/><stop offset="1" stop-color="#ffe2c9"/></linearGradient></defs>
+<rect width="400" height="300" rx="24" fill="url(#h)"/>
+<!-- Laden -->
+<rect x="40" y="96" width="170" height="150" rx="8" fill="#fff"/>
+<path d="M30 96l14-40h162l14 40z" fill="#f08a3e"/>
+<g fill="#fff" opacity=".9"><path d="M58 56l-8 40h22l6-40zM96 56l-4 40h22l2-40zM134 56l2 40h22l-4-40zM172 56l8 40h22l-8-40z"/></g>
+<rect x="60" y="130" width="60" height="116" rx="4" fill="#141c55"/><circle cx="110" cy="190" r="4" fill="#f08a3e"/>
+<rect x="134" y="130" width="60" height="50" rx="4" fill="#dfe5ff"/><rect x="142" y="160" width="14" height="20" fill="#3a4fd8"/><rect x="160" y="150" width="14" height="30" fill="#6f82ff"/><rect x="178" y="140" width="10" height="40" fill="#f08a3e"/>
+<!-- Handy mit Shop -->
+<rect x="236" y="70" width="110" height="196" rx="20" fill="#141c55"/>
+<rect x="246" y="86" width="90" height="164" rx="10" fill="#fff"/>
+<rect x="256" y="98" width="70" height="44" rx="8" fill="#ffe2c9"/><circle cx="291" cy="120" r="12" fill="#f08a3e"/>
+<rect x="256" y="150" width="50" height="6" rx="3" fill="#141c55"/><rect x="256" y="162" width="34" height="6" rx="3" fill="#c9d2ff"/>
+<rect x="256" y="178" width="70" height="20" rx="8" fill="#3a4fd8"/><text x="291" y="192" text-anchor="middle" font-family="Arial" font-weight="700" font-size="10" fill="#fff">KAUFEN</text>
+<rect x="256" y="206" width="32" height="32" rx="6" fill="#eef1ff"/><rect x="294" y="206" width="32" height="32" rx="6" fill="#eef1ff"/>
+<!-- Pakete und Wagen -->
+<g transform="translate(20 236)"><rect width="34" height="28" rx="3" fill="#c08a3e"/><path d="M0 8h34M17 0v28" stroke="#7a4f1d" stroke-width="2"/></g>
+<g transform="translate(150 250) scale(.7)"><path d="M0 0h10l8 30h40l8-22H22" stroke="#141c55" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="40" r="5" fill="#141c55"/><circle cx="54" cy="40" r="5" fill="#141c55"/></g>
+<g transform="translate(330 44)"><circle r="22" fill="#38b886"/><text y="7" text-anchor="middle" font-family="Arial" font-weight="800" font-size="20" fill="#fff">€</text></g>
+</svg>
