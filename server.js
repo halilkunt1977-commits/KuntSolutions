@@ -1,7 +1,8 @@
 // Kunt Solutions: kleiner Webserver ohne Abhängigkeiten (Coolify, Port 3000, Healthcheck /health).
-// POST /api/kontakt speichert Anfragen in DATA_DIR/anfragen.jsonl und meldet sie per Resend,
-// wenn RESEND_API_KEY und MAIL_FROM gesetzt sind (Empfänger KONTAKT_TO, sonst info@kuntsolutions.de).
-const http = require("http"), fs = require("fs"), path = require("path");
+// POST /api/kontakt speichert Anfragen in DATA_DIR/anfragen.jsonl und schickt eine Mail an KONTAKT_TO
+// (sonst info@kuntsolutions.de): bevorzugt über SMTP (Strato: SMTP_HOST=smtp.strato.de, SMTP_PORT=465,
+// SMTP_USER, SMTP_PASS), sonst über Resend (RESEND_API_KEY, MAIL_FROM).
+const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
@@ -18,6 +19,48 @@ function readBody(req) {
   });
 }
 
+
+// Minimaler SMTP-Client (SMTPS Port 465 oder STARTTLS Port 587), AUTH LOGIN.
+function smtpSend({ host, port, secure, user, pass, from, to, replyTo, subject, text, html }) {
+  return new Promise((resolve, reject) => {
+    const b64 = (s) => Buffer.from(s, "utf8").toString("base64");
+    const enc = (s) => "=?UTF-8?B?" + b64(s) + "?=";
+    const bound = "ks" + Date.now().toString(36);
+    const addr = (s) => (String(s).match(/<([^>]+)>/) || [, s])[1].trim();
+    const name = (String(from).match(/^(.*)<[^>]+>/) || [, ""])[1].trim();
+    const body = [
+      `From: ${name ? enc(name) + " " : ""}<${addr(from)}>`, `To: ${to.join(", ")}`, replyTo ? `Reply-To: ${replyTo}` : null,
+      `Subject: ${enc(subject)}`, `Date: ${new Date().toUTCString()}`, `Message-ID: <${Date.now()}.${Math.random().toString(36).slice(2)}@${addr(from).split("@")[1]}>`,
+      "MIME-Version: 1.0", `Content-Type: multipart/alternative; boundary="${bound}"`, "",
+      `--${bound}`, "Content-Type: text/plain; charset=utf-8", "Content-Transfer-Encoding: base64", "", b64(text).replace(/.{76}/g, "$&\r\n"),
+      `--${bound}`, "Content-Type: text/html; charset=utf-8", "Content-Transfer-Encoding: base64", "", b64(html).replace(/.{76}/g, "$&\r\n"), `--${bound}--`, "",
+    ].filter((l) => l !== null).join("\r\n");
+    const steps = [
+      [null, 220], [() => `EHLO ${os.hostname() || "kuntsolutions"}`, 250],
+      ...(secure ? [] : [[() => "STARTTLS", 220, "tls"], [() => `EHLO ${os.hostname() || "kuntsolutions"}`, 250]]),
+      [() => "AUTH LOGIN", 334], [() => b64(user), 334], [() => b64(pass), 235],
+      [() => `MAIL FROM:<${addr(from)}>`, 250], ...to.map((t) => [() => `RCPT TO:<${addr(t)}>`, 250]),
+      [() => "DATA", 354], [() => body + "\r\n.", 250], [() => "QUIT", 221],
+    ];
+    let sock, buf = "", i = 0, done = false;
+    const fail = (e) => { if (done) return; done = true; try { sock.destroy(); } catch {} reject(e instanceof Error ? e : new Error(e)); };
+    const timer = setTimeout(() => fail("SMTP Timeout"), 20000);
+    const onData = (d) => {
+      buf += d.toString();
+      const lines = buf.split("\r\n"); if (!buf.endsWith("\r\n")) return;
+      const last = lines.filter(Boolean).pop() || ""; if (/^\d{3}-/.test(last)) return; buf = "";
+      const code = parseInt(last, 10), [, want, mode] = steps[i];
+      if (code !== want) return fail(`SMTP ${steps[i][0] ? "" : "Begrüßung"} erwartet ${want}, bekam: ${last}`);
+      i++;
+      if (mode === "tls") { sock.removeAllListeners("data"); sock = tls.connect({ socket: sock, servername: host }, () => next()); sock.on("data", onData); sock.on("error", fail); return; }
+      next();
+    };
+    const next = () => { if (i >= steps.length) { done = true; clearTimeout(timer); try { sock.end(); } catch {} return resolve(); } sock.write(steps[i][0]() + "\r\n"); };
+    sock = secure ? tls.connect({ host, port, servername: host }) : net.connect({ host, port });
+    sock.on("data", onData); sock.on("error", fail);
+  });
+}
+
 async function kontakt(req, res) {
   const json = (code, o) => { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(o)); };
   const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
@@ -29,24 +72,19 @@ async function kontakt(req, res) {
   const a = { ts: new Date().toISOString(), name: clean(d.name, 120), company: clean(d.company, 160), email: clean(d.email, 200), phone: clean(d.phone, 60), topic: clean(d.topic, 80), message: clean(d.message, 4000), lang: clean(d.lang, 5) };
   if (!a.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email) || !a.message || d.consent !== true) return json(400, { error: "Pflichtfelder fehlen." });
   try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.appendFileSync(path.join(DATA_DIR, "anfragen.jsonl"), JSON.stringify(a) + "\n"); } catch (e) { console.error("Anfrage nicht gespeichert:", e.message); }
-  if (process.env.RESEND_API_KEY && process.env.MAIL_FROM) {
-    const rows = [["Name", a.name], ["Unternehmen", a.company || "–"], ["E-Mail", a.email], ["Telefon", a.phone || "–"], ["Thema", a.topic || "–"], ["Nachricht", a.message]];
-    try {
-      const r = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: process.env.MAIL_FROM,
-          to: String(process.env.KONTAKT_TO || "info@kuntsolutions.de").split(",").map((s) => s.trim()).filter(Boolean),
-          reply_to: a.email,
-          subject: `Neue Beratungsanfrage: ${a.topic || "Allgemein"} – ${a.name}${a.company ? " (" + a.company + ")" : ""}`,
-          text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
-          html: `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:24px;color:#0f1430"><div style="font-size:20px;font-weight:800;color:#141c55">KUNT SOLUTIONS · Neue Anfrage</div><table style="margin-top:16px;border-collapse:collapse;font-size:15px">${rows.map(([k, v]) => `<tr><td style="padding:6px 14px 6px 0;color:#5d6385;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;white-space:pre-wrap">${esc(v)}</td></tr>`).join("")}</table><p style="color:#5d6385;font-size:13px">Mit „Antworten“ schreiben Sie direkt an ${esc(a.email)}.</p></div>`,
-        }),
-      });
+  const rows = [["Name", a.name], ["Unternehmen", a.company || "–"], ["E-Mail", a.email], ["Telefon", a.phone || "–"], ["Thema", a.topic || "–"], ["Nachricht", a.message]];
+  const to = String(process.env.KONTAKT_TO || "info@kuntsolutions.de").split(",").map((s) => s.trim()).filter(Boolean);
+  const subject = `Neue Beratungsanfrage: ${a.topic || "Allgemein"} – ${a.name}${a.company ? " (" + a.company + ")" : ""}`;
+  const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
+  const html = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:24px;color:#0f1430"><div style="font-size:20px;font-weight:800;color:#141c55">KUNT SOLUTIONS · Neue Anfrage</div><table style="margin-top:16px;border-collapse:collapse;font-size:15px">${rows.map(([k, v]) => `<tr><td style="padding:6px 14px 6px 0;color:#5d6385;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;white-space:pre-wrap">${esc(v)}</td></tr>`).join("")}</table><p style="color:#5d6385;font-size:13px">Mit „Antworten“ schreiben Sie direkt an ${esc(a.email)}.</p></div>`;
+  try {
+    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+      await smtpSend({ host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 465), secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : Number(process.env.SMTP_PORT || 465) === 465, user: process.env.SMTP_USER, pass: process.env.SMTP_PASS, from: process.env.MAIL_FROM || `Kunt Solutions <${process.env.SMTP_USER}>`, to, replyTo: a.email, subject, text, html });
+    } else if (process.env.RESEND_API_KEY && process.env.MAIL_FROM) {
+      const r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: process.env.MAIL_FROM, to, reply_to: a.email, subject, text, html }) });
       if (!r.ok) console.error("Resend:", r.status, await r.text());
-    } catch (e) { console.error("Mail fehlgeschlagen:", e.message); }
-  }
+    }
+  } catch (e) { console.error("Mail fehlgeschlagen:", e.message); }
   json(200, { ok: true });
 }
 
