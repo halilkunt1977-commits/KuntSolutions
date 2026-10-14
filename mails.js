@@ -80,11 +80,20 @@ module.exports = { signature, confirmMail };
 if (require.main === module) {
   const fs = require("fs"), path = require("path"), dir = path.join(__dirname, "email");
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "signatur.html"), `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Signatur Kunt Solutions</title></head><body style="margin:24px">
-<p style="${F};font-size:13px;color:${MUTE}">Outlook: Den Gruß und die Signatur unter der Linie mit der Maus markieren, kopieren und unter Datei → Optionen → E-Mail → Signaturen einfügen.</p><hr style="border:0;border-top:1px solid ${LINE};margin:16px 0 24px">
+  fs.writeFileSync(path.join(dir, "signatur.html"), `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Signatur Kunt Solutions</title></head>
+<body style="margin:0;background:#f3f5fb;${F}"><div style="max-width:720px;margin:32px auto;padding:0 16px">
+<h1 style="font-size:22px;color:${NAVY};margin:0 0 6px">E-Mail-Signatur</h1>
+<p style="font-size:14px;color:${MUTE};margin:0 0 18px">1. Auf <b>Signatur kopieren</b> klicken. 2. In Outlook: <b>Datei → Optionen → E-Mail → Signaturen… → Neu</b>, ins große Feld klicken, <b>Strg+V</b>, Standard für neue Nachrichten und Antworten wählen, <b>OK</b>.</p>
+<button id="cp" style="${F};font-size:15px;font-weight:bold;color:#fff;background:${NAVY};border:0;border-radius:12px;padding:13px 22px;cursor:pointer">📋 Signatur kopieren</button> <span id="ok" style="font-size:14px;color:#0e7a5c;font-weight:bold"></span>
+<div style="background:#fff;border:1px solid ${LINE};border-radius:16px;padding:28px;margin-top:18px"><div id="sig">
 <p style="${F};font-size:14px;color:#0f1430;margin:0 0 14px">Mit freundlichen Grüßen / Best Regards / Saygılarımla</p>
 ${signature("de")}
-</body></html>\n`);
+</div></div></div>
+<script>
+document.getElementById('cp').onclick=async()=>{const el=document.getElementById('sig'),ok=document.getElementById('ok');
+  try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([el.innerHTML],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);ok.textContent='✓ Kopiert – jetzt in Outlook einfügen'}
+  catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);ok.textContent=document.execCommand('copy')?'✓ Kopiert – jetzt in Outlook einfügen':'Bitte markierten Bereich mit Strg+C kopieren'}};
+</script></body></html>\n`);
   const sample = { name: "Halil Kunt", company: "Muster GmbH", email: "kunde@example.com", topic: "Gründung & Aufbau", lang: process.argv[2] || "de", message: "Ersparnis-Rechner: Branche Handwerk & Bau, 8 Mitarbeiter, 55 €/Std. Mögliche Einsparung ca. 55.700 € pro Jahr (22 Std./Woche). Größter Flaschenhals: Stundenzettel & Rechnung." };
   fs.writeFileSync(path.join(dir, "vorschau.html"), confirmMail(sample).html);
   console.log("email/signatur.html und email/vorschau.html geschrieben");

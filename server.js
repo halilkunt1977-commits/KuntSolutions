@@ -5,9 +5,9 @@
 const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os"), zlib = require("zlib"), crypto = require("crypto");
 const { confirmMail } = require("./mails");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
-const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html" };
+const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html", "/signatur": "email/signatur.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
-const PUBLIC = new Set(["index.html", "impressum.html", "datenschutz.html", "robots.txt", "sitemap.xml"]);
+const PUBLIC = new Set(["index.html", "impressum.html", "datenschutz.html", "robots.txt", "sitemap.xml", "email/signatur.html"]);
 const hits = new Map(), GZ = new Map(), LOADING = new Map();
 // Fotos: /img/<name>.jpg nimmt ein eigenes Foto aus assets/img/<name>.jpg, sonst einmalig ein Unsplash-Foto
 // (Unsplash-Lizenz, frei auch gewerblich) in DATA_DIR/img – Besucher laden nichts von fremden Servern.
@@ -190,7 +190,7 @@ http.createServer((req, res) => {
   const ok = PUBLIC.has(name) || (/^assets\/(img\/)?[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
   if (!ok) { res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" }); return fs.createReadStream(path.join(ROOT, "index.html")).pipe(res); }
   const ext = path.extname(name), file = path.join(ROOT, name);
-  const head = { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=2592000, immutable", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", Vary: "Accept-Encoding" };
+  const head = { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=2592000, immutable", "X-Content-Type-Options": "nosniff", ...(name.startsWith("email/") ? { "X-Robots-Tag": "noindex" } : {}), "Referrer-Policy": "strict-origin-when-cross-origin", Vary: "Accept-Encoding" };
   // Text gzip-komprimiert aus dem Speicher (einmal pro Datei und Änderung)
   if ([".html", ".svg", ".txt", ".xml"].includes(ext) && /gzip/.test(req.headers["accept-encoding"] || "")) {
     const st = fs.statSync(file), c = GZ.get(name);

@@ -1,5 +1,9 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Signatur Kunt Solutions</title></head><body style="margin:24px">
-<p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5d6385">Outlook: Den Gruß und die Signatur unter der Linie mit der Maus markieren, kopieren und unter Datei → Optionen → E-Mail → Signaturen einfügen.</p><hr style="border:0;border-top:1px solid #e4e7f3;margin:16px 0 24px">
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Signatur Kunt Solutions</title></head>
+<body style="margin:0;background:#f3f5fb;font-family:Arial,Helvetica,sans-serif"><div style="max-width:720px;margin:32px auto;padding:0 16px">
+<h1 style="font-size:22px;color:#141c55;margin:0 0 6px">E-Mail-Signatur</h1>
+<p style="font-size:14px;color:#5d6385;margin:0 0 18px">1. Auf <b>Signatur kopieren</b> klicken. 2. In Outlook: <b>Datei → Optionen → E-Mail → Signaturen… → Neu</b>, ins große Feld klicken, <b>Strg+V</b>, Standard für neue Nachrichten und Antworten wählen, <b>OK</b>.</p>
+<button id="cp" style="font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;color:#fff;background:#141c55;border:0;border-radius:12px;padding:13px 22px;cursor:pointer">📋 Signatur kopieren</button> <span id="ok" style="font-size:14px;color:#0e7a5c;font-weight:bold"></span>
+<div style="background:#fff;border:1px solid #e4e7f3;border-radius:16px;padding:28px;margin-top:18px"><div id="sig">
 <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#0f1430;margin:0 0 14px">Mit freundlichen Grüßen / Best Regards / Saygılarımla</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;border-collapse:collapse">
 <tr><td style="padding:0 18px 0 0;border-right:3px solid #3a4fd8;vertical-align:middle"><a href="https://kuntsolutions.de" style="text-decoration:none"><img src="https://kuntsolutions.de/assets/logo.png" width="120" alt="KUNT SOLUTIONS – Upgrade your business" style="display:block;width:120px;height:auto;border:0"></a></td>
@@ -11,4 +15,9 @@
 </td></tr>
 <tr><td colspan="2" style="padding-top:12px;font-size:10.5px;color:#8a90ad;line-height:1.5">Unternehmensberatung · Nürnberg · Amtsgericht Nürnberg HRB 42778 · USt-IdNr. DE366346853</td></tr>
 </table>
-</body></html>
+</div></div></div>
+<script>
+document.getElementById('cp').onclick=async()=>{const el=document.getElementById('sig'),ok=document.getElementById('ok');
+  try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([el.innerHTML],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);ok.textContent='✓ Kopiert – jetzt in Outlook einfügen'}
+  catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);ok.textContent=document.execCommand('copy')?'✓ Kopiert – jetzt in Outlook einfügen':'Bitte markierten Bereich mit Strg+C kopieren'}};
+</script></body></html>
