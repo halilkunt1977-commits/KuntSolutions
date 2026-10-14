@@ -10,32 +10,37 @@ const TX = {
   de: { team: "Ihr Kunt Solutions Team", claim: "Unternehmensberatung · Nürnberg", subj: "Ihre Anfrage bei Kunt Solutions ist angekommen", hi: (n) => `Vielen Dank, ${n}!`, sub: "Ihre Anfrage ist bei uns angekommen.",
     lead: "Wir sehen uns Ihr Anliegen genau an und melden uns innerhalb von zwei Werktagen persönlich bei Ihnen – meistens schneller.", yours: "Ihre Anfrage", topic: "Thema", company: "Unternehmen", msg: "Nachricht",
     next: "So geht es weiter", steps: [["Wir sichten Ihre Anfrage", "und bereiten uns auf Ihr Thema vor."], ["Kostenloses Erstgespräch", "per Telefon oder Video – ca. 30 Minuten, unverbindlich."], ["Ihr konkreter Plan", "mit klaren nächsten Schritten und Fördermöglichkeiten."]],
-    more: "Schon mal stöbern?", b1: "💶 Ersparnis-Rechner", b2: "🚀 Existenzgründung", b3: "📘 Kostenlose Leitfäden", reply: "Sie möchten noch etwas ergänzen? Antworten Sie einfach auf diese E-Mail.",
+    more: "Schon mal stöbern?", b1: "💶 Ersparnis-Rechner", b2: "🚀 Existenzgründung", b3: "📘 Kostenlose Leitfäden", ban1: "💡 Wie viel Zeit verliert Ihr Unternehmen?", ban2: "In 1 Minute kostenlos berechnen →", reply: "Sie möchten noch etwas ergänzen? Antworten Sie einfach auf diese E-Mail.",
     foot: "Sie erhalten diese E-Mail, weil auf kuntsolutions.de eine Anfrage mit Ihrer Adresse gesendet wurde. Waren Sie das nicht? Dann ignorieren Sie diese Nachricht einfach." },
   tr: { team: "Kunt Solutions Ekibiniz", claim: "İşletme danışmanlığı · Nürnberg", subj: "Kunt Solutions'a talebiniz ulaştı", hi: (n) => `Teşekkürler, ${n}!`, sub: "Talebiniz bize ulaştı.",
     lead: "Konunuzu dikkatle inceliyoruz ve en geç iki iş günü içinde sizinle bizzat iletişime geçiyoruz – çoğu zaman daha hızlı.", yours: "Talebiniz", topic: "Konu", company: "Şirket", msg: "Mesaj",
     next: "Sonraki adımlar", steps: [["Talebinizi inceliyoruz", "ve konunuza hazırlanıyoruz."], ["Ücretsiz ilk görüşme", "telefon veya video ile – yaklaşık 30 dakika, bağlayıcı değil."], ["Somut planınız", "net sonraki adımlar ve teşvik imkânlarıyla."]],
-    more: "Göz atmak ister misiniz?", b1: "💶 Tasarruf hesaplayıcı", b2: "🚀 Şirket kuruluşu", b3: "📘 Ücretsiz rehberler", reply: "Eklemek istediğiniz bir şey mi var? Bu e-postayı yanıtlamanız yeterli.",
+    more: "Göz atmak ister misiniz?", b1: "💶 Tasarruf hesaplayıcı", b2: "🚀 Şirket kuruluşu", b3: "📘 Ücretsiz rehberler", ban1: "💡 Şirketiniz ne kadar zaman kaybediyor?", ban2: "1 dakikada ücretsiz hesaplayın →", reply: "Eklemek istediğiniz bir şey mi var? Bu e-postayı yanıtlamanız yeterli.",
     foot: "Bu e-postayı, kuntsolutions.de üzerinden adresinizle bir talep gönderildiği için alıyorsunuz. Siz göndermediyseniz bu mesajı dikkate almayın." },
   en: { team: "Your Kunt Solutions team", claim: "Business consulting · Nuremberg", subj: "We have received your request – Kunt Solutions", hi: (n) => `Thank you, ${n}!`, sub: "Your request has reached us.",
     lead: "We are looking at your request carefully and will get back to you personally within two working days – usually sooner.", yours: "Your request", topic: "Topic", company: "Company", msg: "Message",
     next: "What happens next", steps: [["We review your request", "and prepare for your topic."], ["Free first call", "by phone or video – about 30 minutes, no obligation."], ["Your concrete plan", "with clear next steps and funding options."]],
-    more: "Want to look around?", b1: "💶 Savings calculator", b2: "🚀 Starting a business", b3: "📘 Free guides", reply: "Anything to add? Simply reply to this email.",
+    more: "Want to look around?", b1: "💶 Savings calculator", b2: "🚀 Starting a business", b3: "📘 Free guides", ban1: "💡 How much time is your business losing?", ban2: "Calculate it free in 1 minute →", reply: "Anything to add? Simply reply to this email.",
     foot: "You are receiving this email because a request with your address was sent on kuntsolutions.de. If that wasn't you, simply ignore this message." },
 };
 const tx = (l) => TX[l] || TX.de;
 
-// Signatur (auch für Outlook): Logo, Team, Firma, Kontakt – ohne Telefon und ohne Funktion
-function signature(l = "de") {
+// Signatur (auch für Outlook): Logo, Team, Firma, Kontakt, Klick-Buttons und Rechner-Banner – ohne Telefon und ohne Funktion.
+// Farben zusätzlich als bgcolor, weil Outlook keine CSS-Hintergründe/Verläufe kennt. cta:false lässt Buttons und Banner weg.
+function signature(l = "de", { cta = true } = {}) {
   const t = tx(l);
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="${F};border-collapse:collapse">
+  const pill = (href, label) => `<a href="${SITE}/${href}" style="display:inline-block;${F};font-size:12px;font-weight:bold;color:${NAVY};text-decoration:none;background:#eef1ff;border:1px solid #d5dbff;border-radius:8px;padding:6px 11px;margin:0 6px 6px 0;white-space:nowrap">${label}</a>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="${F};border-collapse:collapse;max-width:560px">
 <tr><td style="padding:0 18px 0 0;border-right:3px solid ${BLUE};vertical-align:middle"><a href="${SITE}" style="text-decoration:none"><img src="${SITE}/assets/logo.png" width="120" alt="KUNT SOLUTIONS – Upgrade your business" style="display:block;width:120px;height:auto;border:0"></a></td>
 <td style="padding:0 0 0 18px;vertical-align:middle">
-<div style="font-size:16px;font-weight:bold;color:${NAVY};line-height:1.3">${t.team}</div>
+<div style="font-size:17px;font-weight:bold;color:${NAVY};line-height:1.3">${t.team}</div>
 <div style="font-size:11px;letter-spacing:2px;color:${BLUE};line-height:1.6;padding-bottom:8px">UPGRADE YOUR BUSINESS</div>
 <div style="font-size:13px;color:#0f1430;line-height:1.6"><b>KUNT SOLUTIONS</b> UG (haftungsbeschränkt)<br>Bruckwiesenstraße 17 · 90441 Nürnberg</div>
-<div style="font-size:13px;line-height:1.7;padding-top:4px"><a href="mailto:info@kuntsolutions.de" style="color:${BLUE};text-decoration:none">info@kuntsolutions.de</a> <span style="color:${LINE}">|</span> <a href="${SITE}" style="color:${BLUE};text-decoration:none;font-weight:bold">kuntsolutions.de</a></div>
-</td></tr>
+<div style="font-size:13px;line-height:1.7;padding-top:4px">✉️ <a href="mailto:info@kuntsolutions.de" style="color:${BLUE};text-decoration:none">info@kuntsolutions.de</a> &nbsp; 🌐 <a href="${SITE}" style="color:${BLUE};text-decoration:none;font-weight:bold">kuntsolutions.de</a></div>
+</td></tr>${cta ? `
+<tr><td colspan="2" style="padding-top:14px;line-height:2">${pill("#rechner", t.b1)}${pill("#gruendung", t.b2)}${pill("#wissen", t.b3)}</td></tr>
+<tr><td colspan="2" style="padding-top:4px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${NAVY}" style="background:${NAVY};background-image:linear-gradient(120deg,#0b1038,${NAVY} 50%,${BLUE});border-radius:10px;padding:11px 16px">
+<a href="${SITE}/#rechner" style="${F};text-decoration:none;color:#ffffff;font-size:13px;line-height:1.4"><b>${t.ban1}</b> <span style="color:#b7c2ff">${t.ban2}</span></a></td></tr></table></td></tr>` : ""}
 <tr><td colspan="2" style="padding-top:12px;font-size:10.5px;color:#8a90ad;line-height:1.5">${t.claim} · Amtsgericht Nürnberg HRB 42778 · USt-IdNr. DE366346853</td></tr>
 </table>`;
 }
@@ -67,7 +72,7 @@ ${t.steps.map(([h, p], i) => `<table role="presentation" cellpadding="0" cellspa
 <tr><td style="padding:18px 32px 6px"><div style="font-size:14px;color:${MUTE};padding-bottom:8px">${esc(t.more)}</div>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>${btn("#rechner", t.b1)}${btn("#gruendung", t.b2)}${btn("#wissen", t.b3)}</tr></table></td></tr>
 <tr><td style="padding:18px 32px 0;font-size:14px;color:#0f1430;line-height:1.6">${esc(t.reply)}</td></tr>
-<tr><td style="padding:22px 32px 30px"><div style="border-top:1px solid ${LINE};padding-top:22px">${signature(l)}</div></td></tr>
+<tr><td style="padding:22px 32px 30px"><div style="border-top:1px solid ${LINE};padding-top:22px">${signature(l, { cta: false })}</div></td></tr>
 </table>
 <div style="max-width:560px;${F};font-size:11px;color:#8a90ad;line-height:1.5;padding:16px 12px">${esc(t.foot)}</div>
 </td></tr></table></body></html>`;
