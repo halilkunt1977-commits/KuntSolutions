@@ -2,12 +2,12 @@
 // POST /api/kontakt speichert Anfragen in DATA_DIR/anfragen.jsonl und schickt eine Mail an KONTAKT_TO
 // (sonst info@kuntsolutions.de): bevorzugt über SMTP (Strato: SMTP_HOST=smtp.strato.de, SMTP_PORT=465,
 // SMTP_USER, SMTP_PASS), sonst über Resend (RESEND_API_KEY, MAIL_FROM).
-const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os");
+const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os"), zlib = require("zlib");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
 const PUBLIC = new Set(["index.html", "impressum.html", "datenschutz.html", "robots.txt", "sitemap.xml"]);
-const hits = new Map();
+const hits = new Map(), GZ = new Map();
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const clean = (v, n) => String(v ?? "").trim().slice(0, n);
 
@@ -97,7 +97,15 @@ http.createServer((req, res) => {
   let name = PAGES[url.pathname] || url.pathname.replace(/^\/+/, "");
   const ok = PUBLIC.has(name) || (/^assets\/[\w.-]+$/.test(name) && fs.existsSync(path.join(ROOT, name)));
   if (!ok) { res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" }); return fs.createReadStream(path.join(ROOT, "index.html")).pipe(res); }
-  const ext = path.extname(name);
-  res.writeHead(200, { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=604800", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin" });
-  fs.createReadStream(path.join(ROOT, name)).pipe(res);
+  const ext = path.extname(name), file = path.join(ROOT, name);
+  const head = { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=2592000, immutable", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", Vary: "Accept-Encoding" };
+  // Text gzip-komprimiert aus dem Speicher (einmal pro Datei und Änderung)
+  if ([".html", ".svg", ".txt", ".xml"].includes(ext) && /gzip/.test(req.headers["accept-encoding"] || "")) {
+    const st = fs.statSync(file), c = GZ.get(name);
+    const gz = c && c.m === st.mtimeMs ? c.b : (GZ.set(name, { m: st.mtimeMs, b: zlib.gzipSync(fs.readFileSync(file), { level: 9 }) }), GZ.get(name).b);
+    res.writeHead(200, { ...head, "Content-Encoding": "gzip", "Content-Length": gz.length });
+    return res.end(req.method === "HEAD" ? undefined : gz);
+  }
+  res.writeHead(200, head);
+  fs.createReadStream(file).pipe(res);
 }).listen(PORT, "0.0.0.0", () => console.log("Kunt Solutions läuft auf Port " + PORT));
