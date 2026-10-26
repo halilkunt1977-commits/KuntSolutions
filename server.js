@@ -4,9 +4,10 @@
 // SMTP_USER, SMTP_PASS), sonst über Resend (RESEND_API_KEY, MAIL_FROM).
 const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os"), zlib = require("zlib"), crypto = require("crypto");
 const { confirmMail, leadMail } = require("./mails");
+const stats = require("./stats");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html", "/signatur": "email/signatur.html" };
-const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml", ".js": "text/javascript; charset=utf-8" };
 const PUBLIC = new Set(["index.html", "impressum.html", "datenschutz.html", "robots.txt", "sitemap.xml", "email/signatur.html"]);
 const hits = new Map(), GZ = new Map(), LOADING = new Map();
 // Fotos: /img/<name>.jpg nimmt ein eigenes Foto aus assets/img/<name>.jpg, sonst einmalig ein Unsplash-Foto
@@ -134,15 +135,20 @@ function store() {
   try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.accessSync(DATA_DIR, fs.constants.W_OK); return "OK (" + DATA_DIR + ")"; } catch (e) { return "NICHT beschreibbar (" + e.code + " " + DATA_DIR + ")"; }
 }
 const kontaktTo = () => String(process.env.KONTAKT_TO || "info@kuntsolutions.de").split(",").map((s) => s.trim()).filter(Boolean);
-// Admin-Seiten (?key=ADMIN_KEY, mind. 12 Zeichen)
-function adminOk(url) {
-  const k = String(process.env.ADMIN_KEY || ""), g = String(url.searchParams.get("key") || "");
-  return k.length >= 12 && g.length === k.length && crypto.timingSafeEqual(Buffer.from(g), Buffer.from(k));
+// Admin-Seiten: angemeldet über /admin (Cookie, 30 Tage) oder ?key=ADMIN_KEY (mind. 12 Zeichen)
+const keyOk = (g) => { const k = String(process.env.ADMIN_KEY || ""); g = String(g || ""); return k.length >= 12 && Buffer.byteLength(g) === Buffer.byteLength(k) && crypto.timingSafeEqual(Buffer.from(g), Buffer.from(k)); };
+const sign = (exp) => crypto.createHmac("sha256", String(process.env.ADMIN_KEY)).update("admin." + exp).digest("base64url");
+function cookieOk(req) {
+  const m = String(req.headers.cookie || "").match(/(?:^|;\s*)ks_admin=(\d+)\.([\w-]+)/);
+  if (!m || String(process.env.ADMIN_KEY || "").length < 12 || Number(m[1]) < Date.now()) return false;
+  const a = Buffer.from(m[2]), b = Buffer.from(sign(m[1]));
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
+function adminOk(url, req) { return keyOk(url.searchParams.get("key")) || (req && cookieOk(req)); }
 const tests = [], confTo = new Map(), confAll = [];
-async function mailtest(url, res) {
+async function mailtest(url, req, res) {
   const out = (code, t) => { res.writeHead(code, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); res.end(t); };
-  if (!adminOk(url)) return out(403, "Kein Zugriff. ADMIN_KEY in Coolify setzen und ?key=… anhängen.");
+  if (!adminOk(url, req)) return out(403, "Kein Zugriff. ADMIN_KEY in Coolify setzen und ?key=… anhängen.");
   const now = Date.now(); while (tests.length && now - tests[0] > 3600e3) tests.shift();
   if (tests.length >= 5) return out(429, "Höchstens 5 Testmails pro Stunde.");
   tests.push(now);
@@ -159,14 +165,51 @@ async function mailtest(url, res) {
     out(200, "Testmail „neue Anfrage“ gesendet an " + to.join(", ") + "\nKunden-Bestätigung an " + cto.join(", ") + ": " + (conf === "ok" ? "gesendet" : "FEHLER: " + conf) + "\nüber " + mailInfo() + ". Bitte Postfach (auch Spam) prüfen.\nSpeicher: " + store());
   } catch (e) { out(500, "Fehler beim Senden über " + mailInfo() + ":\n" + e.message); }
 }
-function anfragen(url, res) {
-  if (!adminOk(url)) { res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" }); return res.end("Kein Zugriff."); }
+function anfragen(url, req, res) {
+  if (!adminOk(url, req)) { res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" }); return res.end("Kein Zugriff."); }
   let list = [];
   try { list = fs.readFileSync(path.join(DATA_DIR, "anfragen.jsonl"), "utf8").split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean).reverse(); } catch {}
   const st = (m) => m === "ok" ? "✅ Mail gesendet" : m === "spam" ? "🚫 Spamverdacht (keine Mail, alte Version)" : m === "aus" || m == null ? "⚠️ Mail nicht eingerichtet" : "❌ " + m;
   const rows = list.map((a) => `<div class="a"><div class="h"><b>${esc(a.name)}</b>${a.company ? " · " + esc(a.company) : ""}<span>${esc(new Date(a.ts).toLocaleString("de-DE", { timeZone: "Europe/Berlin" }))}</span></div><div>✉️ <a href="mailto:${esc(a.email)}">${esc(a.email)}</a>${a.phone ? " · 📞 " + esc(a.phone) : ""} · ${esc(a.topic || "–")}</div><p>${esc(a.message)}</p><small>${a.spam ? "⚠️ Spamverdacht: " + esc(a.spam) + " · " : ""}${esc(st(a.mail))}${a.conf ? " · Bestätigung an Kunden: " + esc(a.conf === "ok" ? "✅ gesendet" : a.conf === "spam" ? "keine (Spamverdacht)" : a.conf) : ""}</small></div>`).join("");
   res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" });
-  res.end(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Anfragen</title><style>body{font-family:system-ui,sans-serif;background:#f7f8fc;color:#0f1430;max-width:820px;margin:auto;padding:20px}h1{color:#141c55}.a{background:#fff;border:1px solid #e4e7f3;border-radius:14px;padding:16px;margin:12px 0}.h{display:flex;gap:6px;flex-wrap:wrap}.h span{margin-left:auto;color:#5d6385;font-size:14px}p{white-space:pre-wrap}small{color:#5d6385}a{color:#3a4fd8}</style><h1>Anfragen (${list.length})</h1><p>Mail: ${esc(mailInfo() || "NICHT eingerichtet")}<br>Speicher: ${esc(store())}</p>${rows || "<p>Noch keine Anfragen.</p>"}`);
+  res.end(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Anfragen</title><style>body{font-family:system-ui,sans-serif;background:#f7f8fc;color:#0f1430;max-width:820px;margin:auto;padding:20px}h1{color:#141c55}.a{background:#fff;border:1px solid #e4e7f3;border-radius:14px;padding:16px;margin:12px 0}.h{display:flex;gap:6px;flex-wrap:wrap}.h span{margin-left:auto;color:#5d6385;font-size:14px}p{white-space:pre-wrap}small{color:#5d6385}a{color:#3a4fd8}</style><p><a href="/admin">← Statistik</a></p><h1>Anfragen (${list.length})</h1><p>Mail: ${esc(mailInfo() || "NICHT eingerichtet")}<br>Speicher: ${esc(store())}</p>${rows || "<p>Noch keine Anfragen.</p>"}`);
+}
+
+// Admin-Bereich /admin: Anmeldung mit ADMIN_KEY (höchstens 10 Fehlversuche pro Stunde und IP), dann Statistik-Dashboard (admin.html).
+const fails = new Map();
+const ipOf = (req) => String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+const NOINDEX = { "Cache-Control": "no-store", "X-Robots-Tag": "noindex", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer" };
+function loginPage(res, code, msg) {
+  res.writeHead(code, { "Content-Type": "text/html; charset=utf-8", ...NOINDEX });
+  res.end(`<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><link rel="icon" href="/assets/k.png"><title>Admin · Kunt Solutions</title><style>body{font-family:system-ui,sans-serif;background:#f7f8fc;color:#0f1430;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px;box-sizing:border-box}form{background:#fff;border:1px solid #e4e7f3;border-radius:18px;padding:32px;width:100%;max-width:360px;display:grid;gap:14px}img{height:40px}h1{margin:0;font-size:22px;color:#141c55}input{font:inherit;padding:12px 14px;border:1px solid #cfd4e6;border-radius:10px}button{font:700 15px system-ui;background:#141c55;color:#fff;border:0;border-radius:10px;padding:13px;cursor:pointer}.e{color:#b42318;margin:0;font-size:14px}</style><form method="post" action="/admin/login"><img src="/assets/k.png" alt=""><h1>Admin-Bereich</h1>${msg ? `<p class="e">${esc(msg)}</p>` : ""}<input type="password" name="key" placeholder="Admin-Schlüssel" autocomplete="current-password" autofocus required><button>Anmelden</button></form></html>`);
+}
+function adminRoute(url, req, res) {
+  const p = url.pathname.replace(/\/+$/, "") || "/admin";
+  if (String(process.env.ADMIN_KEY || "").length < 12) { res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", ...NOINDEX }); return res.end("Admin-Bereich ist aus: in Coolify ADMIN_KEY setzen (mindestens 12 Zeichen)."); }
+  if (p === "/admin/login" && req.method === "POST") {
+    const ip = ipOf(req), now = Date.now(), f = (fails.get(ip) || []).filter((t) => now - t < 3600e3);
+    if (f.length >= 10) return loginPage(res, 429, "Zu viele Fehlversuche. Bitte in einer Stunde erneut versuchen.");
+    let b = ""; req.on("data", (c) => { b += c; if (b.length > 2000) req.destroy(); });
+    return req.on("end", () => {
+      if (!keyOk(new URLSearchParams(b).get("key"))) { f.push(now); fails.set(ip, f); return loginPage(res, 403, "Falscher Schlüssel."); }
+      fails.delete(ip);
+      const exp = now + 30 * 864e5, secure = req.headers["x-forwarded-proto"] === "https" ? "; Secure" : "";
+      res.writeHead(303, { Location: "/admin", "Set-Cookie": `ks_admin=${exp}.${sign(exp)}; Path=/; Max-Age=${30 * 86400}; HttpOnly; SameSite=Strict${secure}`, ...NOINDEX });
+      res.end();
+    });
+  }
+  if (p === "/admin/logout") { res.writeHead(303, { Location: "/admin", "Set-Cookie": "ks_admin=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict", ...NOINDEX }); return res.end(); }
+  if (!cookieOk(req)) return loginPage(res, p === "/admin" ? 200 : 403);
+  if (p === "/admin/api/stats") {
+    res.writeHead(200, { "Content-Type": "application/json", ...NOINDEX });
+    return res.end(JSON.stringify(stats.summary(Number(url.searchParams.get("tage")) || 30, path.join(DATA_DIR, "anfragen.jsonl"))));
+  }
+  if (p === "/admin") { res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", ...NOINDEX }); return fs.createReadStream(path.join(ROOT, "admin.html")).pipe(res); }
+  res.writeHead(404, NOINDEX); res.end();
+}
+function hitRoute(req, res) {
+  let b = ""; req.on("data", (c) => { b += c; if (b.length > 4000) req.destroy(); });
+  req.on("end", () => { let d = {}; try { d = JSON.parse(b); } catch {} stats.hit(req, d, { skip: cookieOk(req) }); res.writeHead(204); res.end(); });
 }
 
 async function kontakt(req, res) {
@@ -203,8 +246,10 @@ http.createServer((req, res) => {
   const host = String(req.headers.host || "");
   if (host.startsWith("www.")) { res.writeHead(301, { Location: "https://" + host.slice(4) + req.url }); return res.end(); }
   if (url.pathname === "/api/kontakt" && req.method === "POST") return kontakt(req, res);
-  if (url.pathname === "/api/mailtest") return mailtest(url, res);
-  if (url.pathname === "/anfragen") return anfragen(url, res);
+  if (url.pathname === "/api/hit" && req.method === "POST") return hitRoute(req, res);
+  if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) return adminRoute(url, req, res);
+  if (url.pathname === "/api/mailtest") return mailtest(url, req, res);
+  if (url.pathname === "/anfragen") return anfragen(url, req, res);
   const fm = url.pathname.match(/^\/img\/(\w+)\.jpg$/);
   if (fm && FOTOS[fm[1]]) return fotoRoute(fm[1], req, res);
   const rm = url.pathname.match(/^\/ref\/(\w+?)(-logo)?\.(jpg|png)$/);
@@ -226,5 +271,7 @@ http.createServer((req, res) => {
 }).listen(PORT, "0.0.0.0", () => {
   console.log("Kunt Solutions läuft auf Port " + PORT);
   console.log("Speicher: " + store());
+  console.log(String(process.env.ADMIN_KEY || "").length >= 12 ? "Admin-Bereich: /admin" : "Admin-Bereich aus (ADMIN_KEY fehlt oder unter 12 Zeichen)");
+  stats.cleanup();
   console.log(mailInfo() ? "Mail: " + mailInfo() + " aktiv, an " + kontaktTo().join(", ") : "Mail: NICHT eingerichtet (fehlt: " + mailMissing().join(", ") + ") – Anfragen werden nur gespeichert");
 });
