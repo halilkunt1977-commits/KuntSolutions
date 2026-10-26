@@ -29,3 +29,8 @@ Jede Anfrage bekommt automatisch eine Eingangsbestätigung in der Sprache der Se
 
 ## Partner & Marken
 Partnerkarten zeigen ein Bild der echten Webseite (`/ref/<id>.jpg`, über WordPress mShots) und das Icon der Seite (`/ref/<id>-logo.png`), vom Server geladen und 14 Tage in `DATA_DIR/ref` gespeichert. Eigene Dateien `assets/ref/<id>.jpg` bzw. `<id>-logo.png` haben Vorrang. Partner stehen in `REFS` (server.js) und im Abschnitt `#referenzen` (index.html). Logos der eigenen Marken liegen in `assets/brands/`.
+
+## Admin-Bereich und Statistik
+`https://kuntsolutions.de/admin` – Anmeldung mit `ADMIN_KEY` (Cookie 30 Tage, höchstens 10 Fehlversuche pro Stunde). Danach sind auch `/anfragen` und `/api/mailtest` ohne `?key=` erreichbar.
+Das Dashboard zeigt Besucher, Seitenaufrufe, Ø Besuchsdauer, Absprungrate, Anfragen und Anfragen je Besucher (mit Vergleich zum Vorzeitraum), Verlauf, Seiten, Herkunft, Kampagnen (`?utm_source=` oder `?ref=`), gesehene Abschnitte der Startseite, Tageszeit, Geräte, Browser, Betriebssystem, Sprache und Klicks auf Telefon/E-Mail/externe Links.
+Gemessen wird selbst, ohne Cookies und fremde Dienste: `assets/a.js` meldet an `POST /api/hit`, `stats.js` speichert in `DATA_DIR/stats/<Datum>.jsonl` (also im selben Volume `/app/data`). Keine IP-Adressen, Besucher nur über einen täglich wechselnden Hash erkennbar, Bots und angemeldete Admins werden nicht gezählt, Browser mit „Do Not Track“ auch nicht. Rohdaten werden nach `STATS_DAYS` Tagen (Standard 400) gelöscht. Datenschutzerklärung ist angepasst.

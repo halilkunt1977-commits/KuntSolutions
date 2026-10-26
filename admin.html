@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Statistik · Kunt Solutions</title>
+<link rel="icon" href="/assets/k.png" type="image/png">
+<style>
+:root{--bg:#f7f8fc;--card:#fff;--ink:#0f1430;--mute:#5d6385;--line:#e4e7f3;--grid:#eceef6;--navy:#141c55;--s1:#3a4fd8;--s2:#c76a12;--bar:#dfe4fb;--up:#127a43;--down:#b42318}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1038;--card:#121633;--ink:#eef0fa;--mute:#a3a9c9;--line:#262c55;--grid:#1f2550;--navy:#eef0fa;--s1:#6f7ff0;--s2:#c97d30;--bar:#28306a;--up:#4cc38a;--down:#ff8a7a}}
+:root[data-theme="dark"]{--bg:#0b1038;--card:#121633;--ink:#eef0fa;--mute:#a3a9c9;--line:#262c55;--grid:#1f2550;--navy:#eef0fa;--s1:#6f7ff0;--s2:#c97d30;--bar:#28306a;--up:#4cc38a;--down:#ff8a7a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+a{color:var(--s1)}
+.wrap{max-width:1180px;margin:auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+header img{height:34px}
+header h1{font-size:20px;color:var(--navy);margin-right:auto}
+header nav{display:flex;gap:14px;font-size:14px}
+.live{font-size:13px;color:var(--mute);display:flex;align-items:center;gap:6px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--up);display:inline-block;box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 25%,transparent)}
+.range{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;width:max-content;max-width:100%;overflow-x:auto;margin-bottom:18px}
+.range button{border:0;background:none;color:var(--mute);font:600 13px system-ui;padding:7px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.range button.on{background:var(--navy);color:var(--bg)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
+.k{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.k small{color:var(--mute);font-size:13px;display:block}
+.k b{font-size:26px;font-weight:750;letter-spacing:-.02em;display:block;margin:2px 0;font-variant-numeric:tabular-nums}
+.k span{font-size:12.5px;color:var(--mute)}.k .u{color:var(--up)}.k .d{color:var(--down)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.card h2{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card h2 small{font-weight:400;color:var(--mute);font-size:12.5px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--mute);margin-left:auto}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{fill:var(--mute);font-size:11px;font-family:inherit}
+.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 20px rgba(10,15,50,.14);border-radius:10px;padding:8px 10px;font-size:13px;white-space:nowrap;opacity:0;transition:opacity .1s;z-index:2}
+.tip b{display:block;margin-bottom:2px}.tip i{display:inline-block;width:10px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:6px 0;vertical-align:middle}
+td.n{text-align:right;font-variant-numeric:tabular-nums;padding-left:10px;white-space:nowrap;width:1%}
+td.m{color:var(--mute);font-size:12.5px}
+.row{position:relative;padding:4px 8px;border-radius:6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%}
+.row s{position:absolute;inset:0 auto 0 0;background:var(--bar);border-radius:6px;z-index:0}
+.row span{position:relative;z-index:1}
+.empty{color:var(--mute);font-size:14px;padding:6px 0}
+.list p{padding:7px 0;border-top:1px solid var(--line);font-size:14px}.list p:first-child{border:0}
+.list span{color:var(--mute);font-size:12.5px;display:block}
+.hours{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:end;height:90px}
+.hours div{background:var(--s1);border-radius:3px 3px 0 0;min-height:2px;position:relative}
+.hours div:hover{opacity:.8}
+.hx{display:grid;grid-template-columns:repeat(24,1fr);font-size:10.5px;color:var(--mute);margin-top:4px}
+.note{color:var(--mute);font-size:12.5px;margin-top:18px}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.kpis{grid-template-columns:1fr 1fr}.grid,.grid3{grid-template-columns:1fr}.k b{font-size:22px}.legend{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><img src="/assets/k.png" alt=""><h1>Statistik</h1><span class="live" id="live"></span><nav><a href="/anfragen">Anfragen</a><a href="/" target="_blank">Webseite</a><a href="/admin/logout">Abmelden</a></nav></header>
+<div class="range" id="range"><button data-t="1">Heute</button><button data-t="7">7 Tage</button><button data-t="30" class="on">30 Tage</button><button data-t="90">90 Tage</button><button data-t="365">12 Monate</button></div>
+<div class="kpis" id="kpis"></div>
+<div class="card"><h2 id="ctitle">Besucher und Seitenaufrufe<div class="legend"><span id="lga"><i style="background:var(--s1)"></i>Besucher</span><span><i style="background:var(--s2)"></i>Seitenaufrufe</span></div></h2><div class="chart" id="chart"></div></div>
+<div class="grid">
+  <div class="card"><h2>Seiten <small>Aufrufe · Ø Verweildauer</small></h2><div id="pages"></div></div>
+  <div class="card"><h2>Herkunft <small>woher Besucher kommen</small></h2><div id="refs"></div></div>
+  <div class="card"><h2>Abschnitte der Startseite <small>Anteil der Aufrufe, die ihn gesehen haben</small></h2><div id="sections"></div></div>
+  <div class="card"><h2>Tageszeit <small>Aufrufe nach Uhrzeit</small></h2><div id="hours"></div></div>
+</div>
+<div class="grid3">
+  <div class="card"><h2>Geräte</h2><div id="devices"></div></div>
+  <div class="card"><h2>Browser</h2><div id="browsers"></div></div>
+  <div class="card"><h2>Betriebssystem</h2><div id="os"></div></div>
+  <div class="card"><h2>Sprache der Seite</h2><div id="langs"></div></div>
+  <div class="card"><h2>Klicks <small>Telefon, E-Mail, Links</small></h2><div id="events"></div></div>
+  <div class="card"><h2>Kampagnen <small>utm_source / ?ref=</small></h2><div id="utm"></div></div>
+</div>
+<div class="grid"><div class="card"><h2>Neueste Anfragen <small><a href="/anfragen">alle ansehen</a></small></h2><div id="anfragen" class="list"></div></div></div>
+<p class="note">Eigene Messung ohne Cookies und ohne fremde Dienste. Besucher werden nur innerhalb eines Tages wiedererkannt (Besucher über mehrere Tage = Summe der Tagesbesucher). Bots und deine eigenen Aufrufe, solange du hier angemeldet bist, werden nicht gezählt.</p>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const nf = new Intl.NumberFormat("de-DE");
+const dur = (ms) => { const s = Math.round(ms / 1000); return s < 60 ? s + " s" : Math.floor(s / 60) + " min " + String(s % 60).padStart(2, "0") + " s"; };
+const pct = (x) => Math.round(x * 100) + " %";
+const fd = (d, o) => new Date(d + "T12:00:00").toLocaleDateString("de-DE", o || { day: "numeric", month: "short" });
+let tage = 30; try { tage = Number(localStorage.getItem("ks-admin-tage")) || 30; } catch (e) {}
+
+function delta(c, p, inverse) {
+  if (!p) return c ? '<span class="u">neu</span>' : "<span>–</span>";
+  const r = (c - p) / p, good = inverse ? r < 0 : r > 0;
+  if (Math.abs(r) < 0.005) return "<span>±0 %</span>";
+  return `<span class="${good ? "u" : "d"}">${r > 0 ? "▲" : "▼"} ${Math.abs(Math.round(r * 100))} %</span>`;
+}
+function kpis(s) {
+  const c = s.kpi, p = s.prev, cmp = s.days === 1 ? "ggü. gestern" : "ggü. Vorzeitraum";
+  const conv = (o) => o.visitors ? o.anfragen / o.visitors : 0;
+  const t = [
+    ["Besucher", nf.format(c.visitors), delta(c.visitors, p.visitors)],
+    ["Seitenaufrufe", nf.format(c.views), delta(c.views, p.views)],
+    ["Ø Besuchsdauer", dur(c.dauer), delta(c.dauer, p.dauer)],
+    ["Absprungrate", pct(c.bounce), delta(c.bounce, p.bounce, true)],
+    ["Anfragen", nf.format(c.anfragen), delta(c.anfragen, p.anfragen)],
+    ["Anfragen je Besucher", (conv(c) * 100).toFixed(1).replace(".", ",") + " %", delta(conv(c), conv(p))],
+  ];
+  $("kpis").innerHTML = t.map(([a, b, d]) => `<div class="k"><small>${a}</small><b>${b}</b>${d} <span>${cmp}</span></div>`).join("");
+}
+function bars(id, rows, opt = {}) {
+  const el = $(id);
+  if (!rows.length || !rows.some((r) => r[1])) { el.innerHTML = '<p class="empty">Noch keine Daten.</p>'; return; }
+  const total = opt.total || rows.reduce((a, r) => a + r[1], 0), max = opt.total || Math.max(...rows.map((r) => r[1]));
+  el.innerHTML = "<table>" + rows.map((r) => `<tr><td><div class="row" title="${esc(r[0])}"><s style="width:${(100 * r[1] / max).toFixed(1)}%"></s><span>${esc(r[0])}</span></div></td>${opt.extra ? `<td class="n m">${opt.extra(r)}</td>` : ""}<td class="n">${nf.format(r[1])}</td><td class="n m">${Math.round(100 * r[1] / total)} %</td></tr>`).join("") + "</table>";
+}
+
+// Verlauf: Besucher und Seitenaufrufe auf einer gemeinsamen Achse; bei mehr als 120 Tagen wochenweise
+function chart(s) {
+  let pts = s.daily.map((d) => ({ label: fd(d.d, { weekday: "short", day: "numeric", month: "short" }), x: d.d, a: d.visitors, b: d.views, f: d.anfragen }));
+  if (pts.length > 120) {
+    const w = []; for (let i = 0; i < pts.length; i += 7) { const g = pts.slice(i, i + 7); w.push({ label: "Woche ab " + fd(g[0].x), x: g[0].x, a: g.reduce((t, p) => t + p.a, 0), b: g.reduce((t, p) => t + p.b, 0), f: g.reduce((t, p) => t + p.f, 0) }); }
+    pts = w;
+  }
+  $("ctitle").firstChild.textContent = pts.length !== s.daily.length ? "Besucher und Seitenaufrufe pro Woche " : "Besucher und Seitenaufrufe pro Tag ";
+  if (s.days === 1) {
+    // Heute: stündlich statt einem einzelnen Punkt
+    pts = s.hours.map((n, h) => ({ label: h + ":00–" + (h + 1) + ":00 Uhr", x: h + " Uhr", b: n, a: null, f: null }));
+    $("ctitle").firstChild.textContent = "Seitenaufrufe heute nach Stunde ";
+  }
+  $("lga").hidden = s.days === 1;
+  const W = Math.max(300, $("chart").clientWidth || 1100), H = W < 600 ? 200 : 260, L = 40, R = 10, T = 12, B = 26, iw = W - L - R, ih = H - T - B;
+  const max = Math.max(4, ...pts.map((p) => Math.max(p.a || 0, p.b || 0)));
+  const raw = max / 4, mag = Math.pow(10, Math.floor(Math.log10(raw))), step = Math.max(1, [1, 2, 5, 10].map((f) => f * mag).find((v) => v >= raw)), nice = Math.ceil(max / step) * step;
+  const ticks = Array.from({ length: Math.round(nice / step) + 1 }, (_, i) => i * step);
+  const X = (i) => L + (pts.length === 1 ? iw / 2 : (i * iw) / (pts.length - 1)), Y = (v) => T + ih - (v / nice) * ih;
+  const line = (k) => pts.map((p, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(p[k] || 0).toFixed(1)).join(" ");
+  const every = Math.ceil(pts.length / Math.max(3, Math.floor(W / 120)));
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Verlauf">`;
+  svg += ticks.map((t) => `<line x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--grid)"/><text x="${L - 8}" y="${Y(t) + 4}" text-anchor="end">${nf.format(t)}</text>`).join("");
+  svg += pts.map((p, i) => i % every === 0 ? `<text x="${X(i)}" y="${H - 6}" text-anchor="middle">${esc(s.days === 1 ? p.x : fd(p.x))}</text>` : "").join("");
+  if (pts[0].a !== null) svg += `<path d="${line("a")} L${X(pts.length - 1)} ${Y(0)} L${X(0)} ${Y(0)}Z" fill="var(--s1)" opacity=".1"/><path d="${line("a")}" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>`;
+  svg += `<path d="${line("b")}" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round"/>`;
+  svg += `<line id="cx" y1="${T}" y2="${T + ih}" stroke="var(--mute)" stroke-dasharray="3 3" opacity="0"/><circle id="ca" r="4.5" fill="var(--s1)" stroke="var(--card)" stroke-width="2" opacity="0"/><circle id="cb" r="4.5" fill="var(--s2)" stroke="var(--card)" stroke-width="2" opacity="0"/>`;
+  svg += `<rect x="${L}" y="0" width="${iw}" height="${H}" fill="transparent" id="hov"/></svg><div class="tip" id="tip"></div>`;
+  $("chart").innerHTML = svg;
+  const el = $("hov"), sv = el.ownerSVGElement, tip = $("tip");
+  const show = (ev) => {
+    const r = sv.getBoundingClientRect(), x = ((ev.clientX - r.left) / r.width) * W, i = Math.max(0, Math.min(pts.length - 1, Math.round(((x - L) / iw) * (pts.length - 1)))), p = pts[i];
+    $("cx").setAttribute("x1", X(i)); $("cx").setAttribute("x2", X(i)); $("cx").setAttribute("opacity", 1);
+    if (p.a !== null) { $("ca").setAttribute("cx", X(i)); $("ca").setAttribute("cy", Y(p.a)); $("ca").setAttribute("opacity", 1); }
+    $("cb").setAttribute("cx", X(i)); $("cb").setAttribute("cy", Y(p.b)); $("cb").setAttribute("opacity", 1);
+    tip.innerHTML = `<b>${esc(p.label)}</b>${p.a !== null ? `<i style="background:var(--s1)"></i>Besucher ${nf.format(p.a)}<br>` : ""}<i style="background:var(--s2)"></i>Seitenaufrufe ${nf.format(p.b)}${p.f ? `<br>Anfragen ${p.f}` : ""}`;
+    const px = (X(i) / W) * r.width; tip.style.opacity = 1; tip.style.top = "8px";
+    tip.style.left = Math.min(Math.max(0, px + 12), r.width - tip.offsetWidth) + "px";
+  };
+  el.addEventListener("pointermove", show); el.addEventListener("pointerdown", show);
+  el.addEventListener("pointerleave", () => { tip.style.opacity = 0; ["cx", "ca", "cb"].forEach((k) => $(k).setAttribute("opacity", 0)); });
+}
+function hours(s) {
+  const m = Math.max(1, ...s.hours);
+  $("hours").innerHTML = s.hours.some(Boolean) ? `<div class="hours">${s.hours.map((n, h) => `<div style="height:${(100 * n / m).toFixed(1)}%" title="${h}–${h + 1} Uhr: ${nf.format(n)} Aufrufe"></div>`).join("")}</div><div class="hx">${s.hours.map((n, h) => `<span>${h % 6 === 0 ? h : ""}</span>`).join("")}</div>` : '<p class="empty">Noch keine Daten.</p>';
+}
+async function load() {
+  document.querySelectorAll("#range button").forEach((b) => b.classList.toggle("on", Number(b.dataset.t) === tage));
+  const r = await fetch("/admin/api/stats?tage=" + tage, { cache: "no-store" });
+  if (r.status === 403) return location.reload();
+  const s = await r.json();
+  $("live").innerHTML = `<i></i>${s.live} gerade aktiv`;
+  kpis(s); chart(s); hours(s);
+  bars("pages", s.pages, { extra: (r) => r[2] ? dur(r[2]) : "" });
+  bars("refs", s.refs); bars("utm", s.utm); bars("devices", s.devices); bars("browsers", s.browsers); bars("os", s.os); bars("langs", s.langs); bars("events", s.events);
+  bars("sections", s.sections, { total: s.indexViews });
+  $("anfragen").innerHTML = s.anfragen.length ? s.anfragen.map((a) => `<p><b>${esc(a.name)}</b>${a.company ? " · " + esc(a.company) : ""}<span>${esc(new Date(a.ts).toLocaleString("de-DE", { dateStyle: "medium", timeStyle: "short" }))} · ${esc(a.topic || "–")}</span></p>`).join("") : '<p class="empty">Keine Anfragen im Zeitraum.</p>';
+}
+$("range").onclick = (e) => { const t = Number(e.target.dataset && e.target.dataset.t); if (!t) return; tage = t; try { localStorage.setItem("ks-admin-tage", t); } catch (err) {} load(); };
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(load, 300); });
+load(); setInterval(() => { if (!document.hidden) load(); }, 60000);
+</script>
+</body>
+</html>

@@ -680,5 +680,6 @@ f.addEventListener('submit',async e=>{e.preventDefault();const d=Object.fromEntr
   msg.textContent=T[L].send;const b=f.querySelector('button');b.disabled=true;
   try{const r=await fetch('/api/kontakt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});if(!r.ok)throw 0;msg.textContent=T[L].ok;f.reset()}catch(err){msg.textContent=T[L].err}b.disabled=false});
 </script>
+<script src="/assets/a.js?v=1" defer></script>
 </body>
 </html>
