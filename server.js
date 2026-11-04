@@ -5,6 +5,7 @@
 const http = require("http"), fs = require("fs"), path = require("path"), tls = require("tls"), net = require("net"), os = require("os"), zlib = require("zlib"), crypto = require("crypto");
 const { confirmMail, leadMail } = require("./mails");
 const stats = require("./stats");
+const hub = require("./hub");
 const ROOT = __dirname, PORT = process.env.PORT || 3000, DATA_DIR = process.env.DATA_DIR || path.join(ROOT, "data");
 const PAGES = { "/": "index.html", "/impressum": "impressum.html", "/datenschutz": "datenschutz.html", "/signatur": "email/signatur.html" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml", ".js": "text/javascript; charset=utf-8" };
@@ -247,6 +248,7 @@ http.createServer((req, res) => {
   if (host.startsWith("www.")) { res.writeHead(301, { Location: "https://" + host.slice(4) + req.url }); return res.end(); }
   if (url.pathname === "/api/kontakt" && req.method === "POST") return kontakt(req, res);
   if (url.pathname === "/api/hit" && req.method === "POST") return hitRoute(req, res);
+  if (url.pathname === "/api/hub" && req.method === "GET") return hub.hubRoute(url, req, res, path.join(DATA_DIR, "anfragen.jsonl"));
   if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) return adminRoute(url, req, res);
   if (url.pathname === "/api/mailtest") return mailtest(url, req, res);
   if (url.pathname === "/anfragen") return anfragen(url, req, res);
